@@ -20,8 +20,7 @@ namespace KeywordsSoft.Program
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var repo = new DatabaseRepository();
-            repo.CreateDatabaseFile(@"D:\FreeLance\Программа для работы с ключами\KeywordsSoft\KeywordsSoft.Program\bin\Debug\test\test.db");
+            new DatabaseRepository().CreateDatabases("ru_test");
         }
     }
 }

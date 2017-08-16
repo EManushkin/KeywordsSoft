@@ -6,27 +6,62 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SQLite.EF6;
+using System.Configuration;
+using System.IO;
+using System.Data;
+using System.Data.Common;
 
 namespace KeywordsSoft.Library.Database
 {
     public class DatabaseRepository
     {
-        public void CreateDatabaseFile(string path)
+        private string KeysPath = $@"{ConfigurationManager.AppSettings["DatabasePath"]}\keys\";
+        private string TextsPath = $@"{ConfigurationManager.AppSettings["DatabasePath"]}\texts\";
+
+        private SQLiteCommand sqLiteCommand;
+
+        public DatabaseRepository()
+        {
+            sqLiteCommand = new SQLiteCommand();
+            sqLiteCommand.CommandType = CommandType.Text;
+            sqLiteCommand.CommandTimeout = 10;
+        }
+
+        private string GetConnectionString(string path)
+        {
+            return $@"Data Source={path}.db;Version=3;"; //Password={ConfigurationManager.AppSettings["DatabasePassword"]};
+        }
+
+        public void CreateDatabases(string name)
+        {
+            CreateKeysDatabase(name);
+            CreateTextsDatabase(name);
+        }
+
+
+        public void CreateKeysDatabase(string name)
         {
             try
             {
-                SQLiteConnection.CreateFile(path);
+                if (!Directory.Exists(KeysPath))
+                {
+                    Directory.CreateDirectory(KeysPath);
+                }
 
-                //using (SQLiteConnection sqLiteConnection = CreateConnection(path))
-                //using (DatabaseContext context = new DatabaseContext(sqLiteConnection))
-                //{
-                //    DropCreateDatabaseAlways<DatabaseContext> initializator = new DropCreateDatabaseAlways<DatabaseContext>();
-                //    System.Data.Entity.Database.SetInitializer(initializator);
+                using (var connection = new SQLiteConnection(GetConnectionString(KeysPath + name)))
+                {
+                    connection.Open();
+                    sqLiteCommand.Connection = connection;
+                    sqLiteCommand.CommandText = @"CREATE TABLE Keys(
+                                                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+                                                    name  TEXT);
+                                                  CREATE TABLE variations(
+                                                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+                                                    name TEXT);";
 
-                //    context.SaveChanges();
-                //    // do not delete this log trace. we need some DB touch
-                //    var count = context.Keys.Count();
-                //}
+                    sqLiteCommand.ExecuteNonQuery();
+                    connection.Close();
+                }
             }
             catch (Exception ex)
             {
@@ -34,13 +69,35 @@ namespace KeywordsSoft.Library.Database
             }
         }
 
-        private static SQLiteConnection CreateConnection(string path)
+        public void CreateTextsDatabase(string name)
         {
-            SQLiteConnectionStringBuilder builder = (SQLiteConnectionStringBuilder)SQLiteProviderFactory.Instance.CreateConnectionStringBuilder();
-            builder.DataSource = path;
-            builder.FailIfMissing = false;
+            try
+            {
+                if (!Directory.Exists(TextsPath))
+                {
+                    Directory.CreateDirectory(TextsPath);
+                }
 
-            return new SQLiteConnection(builder.ToString());
+                using (var connection = new SQLiteConnection(GetConnectionString(TextsPath + name + "_texts")))
+                {
+                    connection.Open();
+                    sqLiteCommand.Connection = connection;
+                    sqLiteCommand.CommandText = @"CREATE TABLE Texts(
+                                                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+                                                    key_id INTEGER,
+                                                    text TEXT,
+                                                    spin TEXT,
+                                                    parser_id INTEGER,
+                                                    url TEXT);";
+
+                    sqLiteCommand.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                //TODO _log.Error(ex);
+            }
         }
     }
 }
