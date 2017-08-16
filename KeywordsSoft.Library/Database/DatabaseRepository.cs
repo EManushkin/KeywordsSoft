@@ -15,51 +15,38 @@ namespace KeywordsSoft.Library.Database
 {
     public class DatabaseRepository
     {
-        private string KeysPath = $@"{ConfigurationManager.AppSettings["DatabasePath"]}\keys\";
-        private string TextsPath = $@"{ConfigurationManager.AppSettings["DatabasePath"]}\texts\";
-
-        private SQLiteCommand sqLiteCommand;
-
         public DatabaseRepository()
         {
-            sqLiteCommand = new SQLiteCommand();
-            sqLiteCommand.CommandType = CommandType.Text;
-            sqLiteCommand.CommandTimeout = 10;
         }
 
-        private string GetConnectionString(string path)
+        private string GetConnectionString(string fullPath)
         {
-            return $@"Data Source={path}.db;Version=3;"; //Password={ConfigurationManager.AppSettings["DatabasePassword"]};
-        }
-
-        public void CreateDatabases(string name)
-        {
-            CreateKeysDatabase(name);
-            CreateTextsDatabase(name);
+            return $@"Data Source={fullPath}.db;Version=3;"; //Password={ConfigurationManager.AppSettings["DatabasePassword"]};
         }
 
 
-        public void CreateKeysDatabase(string name)
+        public void Create(string path, string name, string command)
         {
             try
             {
-                if (!Directory.Exists(KeysPath))
+                if (!Directory.Exists(path))
                 {
-                    Directory.CreateDirectory(KeysPath);
+                    Directory.CreateDirectory(path);
                 }
 
-                using (var connection = new SQLiteConnection(GetConnectionString(KeysPath + name)))
+                using (var connection = new SQLiteConnection(GetConnectionString(path + name)))
                 {
                     connection.Open();
-                    sqLiteCommand.Connection = connection;
-                    sqLiteCommand.CommandText = @"CREATE TABLE Keys(
-                                                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
-                                                    name  TEXT);
-                                                  CREATE TABLE variations(
-                                                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
-                                                    name TEXT);";
 
-                    sqLiteCommand.ExecuteNonQuery();
+                    using (SQLiteCommand sqLiteCommand = new SQLiteCommand())
+                    {
+                        sqLiteCommand.CommandType = CommandType.Text;
+                        sqLiteCommand.CommandTimeout = 10;
+                        sqLiteCommand.Connection = connection;
+                        sqLiteCommand.CommandText = command;
+                        sqLiteCommand.ExecuteNonQuery();
+                    }
+
                     connection.Close();
                 }
             }
@@ -69,35 +56,22 @@ namespace KeywordsSoft.Library.Database
             }
         }
 
-        public void CreateTextsDatabase(string name)
+        public void Delete(string fullPath)
         {
-            try
+            if (File.Exists(fullPath + ".db"))
             {
-                if (!Directory.Exists(TextsPath))
-                {
-                    Directory.CreateDirectory(TextsPath);
-                }
-
-                using (var connection = new SQLiteConnection(GetConnectionString(TextsPath + name + "_texts")))
-                {
-                    connection.Open();
-                    sqLiteCommand.Connection = connection;
-                    sqLiteCommand.CommandText = @"CREATE TABLE Texts(
-                                                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
-                                                    key_id INTEGER,
-                                                    text TEXT,
-                                                    spin TEXT,
-                                                    parser_id INTEGER,
-                                                    url TEXT);";
-
-                    sqLiteCommand.ExecuteNonQuery();
-                    connection.Close();
-                }
+                File.Delete(fullPath + ".db");
             }
-            catch (Exception ex)
+        }
+
+        public string [] GetСategories(string path)
+        {
+            if (Directory.Exists(path))
             {
-                //TODO _log.Error(ex);
+                return Directory.GetFiles(path, "*.db").Select(file => Path.GetFileNameWithoutExtension(file)).OrderBy(file => file).ToArray();
             }
+
+            return null;
         }
     }
 }
