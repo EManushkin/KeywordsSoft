@@ -68,10 +68,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Database\DatabaseRepository.cs" />
+    <Compile Include="Entities\Parsers.cs" />
     <Compile Include="Entities\Keys.cs" />
     <Compile Include="Helpers\DatabaseHelper.cs" />
     <Compile Include="Helpers\ImagesHelper.cs" />
     <Compile Include="Helpers\ClustersHelper.cs" />
+    <Compile Include="Helpers\ParsersHelper.cs" />
     <Compile Include="Helpers\VideosHelper.cs" />
     <Compile Include="Helpers\SuggestsHelper.cs" />
     <Compile Include="Helpers\SnippetsHelper.cs" />

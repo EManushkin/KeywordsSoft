@@ -10,6 +10,7 @@ using System.Configuration;
 using System.IO;
 using System.Data;
 using System.Data.Common;
+using System.Reflection;
 
 namespace KeywordsSoft.Library.Database
 {
@@ -72,6 +73,53 @@ namespace KeywordsSoft.Library.Database
             }
 
             return null;
+        }
+
+        public List<T> Select<T>(string path, string name) where T : class, new()
+        {
+            List<T> list = new List<T>();
+
+            if (File.Exists(path + name + ".db"))
+            {
+                try
+                {
+                    using (var connection = new SQLiteConnection(GetConnectionString(path + name)))
+                    {
+                        
+                        T obj = default(T);
+
+                        connection.Open();
+
+                        using (SQLiteCommand sqLiteCommand = new SQLiteCommand())
+                        {
+                            sqLiteCommand.CommandType = CommandType.Text;
+                            sqLiteCommand.CommandTimeout = 10;
+                            sqLiteCommand.Connection = connection;
+                            sqLiteCommand.CommandText = $"SELECT * FROM {typeof(T).Name}";
+
+                            SQLiteDataReader reader = sqLiteCommand.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                obj = Activator.CreateInstance<T>();
+                                foreach (PropertyInfo prop in obj.GetType().GetProperties())
+                                {
+                                    if (!object.Equals(reader[prop.Name], DBNull.Value))
+                                    {
+                                        prop.SetValue(obj, reader[prop.Name], null);
+                                    }
+                                }
+                                list.Add(obj);
+                            }
+                        }
+
+                        connection.Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+            return list;
         }
     }
 }

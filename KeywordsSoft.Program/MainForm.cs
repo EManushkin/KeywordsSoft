@@ -14,59 +14,82 @@ namespace KeywordsSoft.Program
 {
     public partial class MainForm : Form
     {
+        public string currentCategory { get; set; }
+        public string previousCategory { get; set; }
+
         public MainForm()
         {
             InitializeComponent();
 
-            LoadСategoriesMenu();
-
+            LoadMenu();
         }
 
-        private void LoadСategoriesMenu()
+        private void LoadMenu()
         {
-            this.категорияToolStripMenuItem.DropDownItems.Clear();
+            this.categoryMenu.DropDownItems.Clear();
+            this.actionMenu_moveItem.DropDownItems.Clear();
 
-            ToolStripItem toolStripItem;
+            ToolStripItem categoryToolStripItem;
+            ToolStripItem moveToolStripItem;
             foreach (var item in new DatabaseHelper().GetСategories())
             {
-                toolStripItem = new ToolStripMenuItem();
-                toolStripItem.Name = $"categoryMenu_{item}";
-                toolStripItem.Text = item;
-                toolStripItem.Click += new EventHandler(categoryMenuItem_Click);
+                categoryToolStripItem = new ToolStripMenuItem();
+                categoryToolStripItem.Name = $"categoryMenu_{item}";
+                categoryToolStripItem.Text = item;
+                categoryToolStripItem.Click += new EventHandler(categoryMenuItem_Click);
+                this.categoryMenu.DropDownItems.Add(categoryToolStripItem);
 
-                this.категорияToolStripMenuItem.DropDownItems.Add(toolStripItem);
+
+                moveToolStripItem = new ToolStripMenuItem();
+                moveToolStripItem.Name = $"actionMenu_moveItem_{item}";
+                moveToolStripItem.Text = item;
+                moveToolStripItem.Click += new EventHandler(actionMenu_moveItem_Click);
+                this.actionMenu_moveItem.DropDownItems.Add(moveToolStripItem);
             }
 
-            this.категорияToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+            this.categoryMenu.DropDownItems.Add(new ToolStripSeparator());
 
-            toolStripItem = new ToolStripMenuItem();
-            toolStripItem.Name = "AddCategory";
-            toolStripItem.Text = "Добавить категорию...";
-            toolStripItem.Click += new EventHandler(categoryMenuItem_Click);
+            categoryToolStripItem = new ToolStripMenuItem();
+            categoryToolStripItem.Name = "AddCategory";
+            categoryToolStripItem.Text = "Добавить категорию...";
+            categoryToolStripItem.Image = Properties.Resources.add_icon;
+            categoryToolStripItem.Click += new EventHandler(categoryMenuItem_Click);
 
-            this.категорияToolStripMenuItem.DropDownItems.Add(toolStripItem);
+            this.categoryMenu.DropDownItems.Add(categoryToolStripItem);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //new KeysHelper().CreateCategoryDatabases("ru_test");
-
-            //new KeysHelper().DeleteCategoryDatabases("ru_test");
+            //new ParsersHelper().CreateDatabase();
+            var parsers = new ParsersHelper().Select();
 
         }
 
         private void categoryMenuItem_Click(object sender, EventArgs e)
         {
-            ToolStripItem toolStripItem = sender as ToolStripItem;
+            ToolStripItem item = sender as ToolStripItem;
 
-            if (toolStripItem.Name == "AddCategory")
+            if (item.Name == "AddCategory")
             {
 
             }
             else
             {
+                previousCategory = currentCategory;
+                currentCategory = item.Text;
 
+                actionMenu.Enabled = true;
+                if (!string.IsNullOrEmpty(previousCategory))
+                    this.actionMenu_moveItem.DropDownItems[$"actionMenu_moveItem_{previousCategory}"].Enabled = true;
+                this.actionMenu_moveItem.DropDownItems[$"actionMenu_moveItem_{currentCategory}"].Enabled = false;
             }
+        }
+
+        private void actionMenu_moveItem_Click(object sender, EventArgs e)
+        {
+            ToolStripItem item = sender as ToolStripItem;
+
+            
         }
     }
 }
