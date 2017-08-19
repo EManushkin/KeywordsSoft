@@ -8,6 +8,7 @@ namespace KeywordsSoft.Program
 {
     static class Program
     {
+        public static MainForm mainForm;
         /// <summary>
         /// Главная точка входа для приложения.
         /// </summary>
@@ -16,7 +17,8 @@ namespace KeywordsSoft.Program
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            mainForm = new MainForm();
+            Application.Run(mainForm);
         }
     }
 }

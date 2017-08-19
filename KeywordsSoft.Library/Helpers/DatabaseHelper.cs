@@ -24,15 +24,19 @@ namespace KeywordsSoft.Library.Helpers
             return Database.GetСategories(СategoriesPath);
         }
 
-        public void CreateCategoryDatabases(string name)
+        public bool CreateCategoryDatabases(string name)
         {
-            new KeysHelper().CreateDatabase(name);
-            new TextsHelper().CreateDatabase(name);
-            new ImagesHelper().CreateDatabase(name);
-            new SnippetsHelper().CreateDatabase(name);
-            new SuggestsHelper().CreateDatabase(name);
-            new VideosHelper().CreateDatabase(name);
-            new ClustersHelper().CreateDatabase(name);
+            if (new KeysHelper().CreateDatabase(name))
+            {
+                return new TextsHelper().CreateDatabase(name) &&
+                new ImagesHelper().CreateDatabase(name) &&
+                new SnippetsHelper().CreateDatabase(name) &&
+                new SuggestsHelper().CreateDatabase(name) &&
+                new VideosHelper().CreateDatabase(name) &&
+                new ClustersHelper().CreateDatabase(name);
+            }
+
+            return false;
         }
 
         public void DeleteCategoryDatabases(string name)

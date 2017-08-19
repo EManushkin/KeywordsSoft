@@ -26,10 +26,15 @@ namespace KeywordsSoft.Library.Database
         }
 
 
-        public void Create(string path, string name, string command)
+        public bool Create(string path, string name, string command)
         {
             try
             {
+                if (File.Exists(path + name + ".db"))
+                {
+                    return false;
+                }
+
                 if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);
@@ -50,10 +55,13 @@ namespace KeywordsSoft.Library.Database
 
                     connection.Close();
                 }
+
+                return true;
             }
             catch (Exception ex)
             {
                 //TODO _log.Error(ex);
+                return false;
             }
         }
 

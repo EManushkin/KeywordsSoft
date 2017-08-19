@@ -11,7 +11,7 @@ namespace KeywordsSoft.Library.Helpers
 {
     public class ParsersHelper
     {
-        private string Path = $@"{ConfigurationManager.AppSettings["DatabasePath"]}\parsers\";
+        private string Path = ""; //$@"{ConfigurationManager.AppSettings["DatabasePath"]}\parsers\";
 
         private string CreateCommand = @"CREATE TABLE parsers(
                                             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
@@ -32,9 +32,9 @@ namespace KeywordsSoft.Library.Helpers
             Database = new DatabaseRepository();
         }
 
-        public void CreateDatabase()
+        public bool CreateDatabase()
         {
-            Database.Create(Path, "parsers", CreateCommand);
+            return Database.Create(Path, "parsers", CreateCommand);
         }
 
         public void DeleteDatabase()

@@ -27,9 +27,9 @@ namespace KeywordsSoft.Library.Helpers
             Database = new DatabaseRepository();
         }
 
-        public void CreateDatabase(string name)
+        public bool CreateDatabase(string name)
         {
-            Database.Create(Path, name + "_texts", CreateCommand);
+            return Database.Create(Path, name + "_texts", CreateCommand);
         }
 
         public void DeleteDatabase(string name)
