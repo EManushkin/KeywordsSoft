@@ -1,4 +1,5 @@
 ﻿using KeywordsSoft.Library.Database;
+using KeywordsSoft.Library.Entities;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -35,6 +36,11 @@ namespace KeywordsSoft.Library.Helpers
         public void DeleteDatabase(string name)
         {
             Database.Delete(Path + name);
+        }
+
+        public bool Add(string name, List<string> entity)
+        {
+            return Database.Add<Keys>(Path, name, entity);
         }
     }
 }

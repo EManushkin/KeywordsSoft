@@ -18,7 +18,7 @@ namespace KeywordsSoft.Program
         public string currentCategory { get; set; }
         public string previousCategory { get; set; }
 
-        public string categoryFilter { get; set; }
+        private CheckBox ckBox { get; set; }
 
         public MainForm()
         {
@@ -26,6 +26,9 @@ namespace KeywordsSoft.Program
 
             LoadMenu();
             LoadMenuParsers();
+            LoadDataGridViewCategoryKeys();
+
+
         }
 
         public void LoadMenu()
@@ -99,19 +102,33 @@ namespace KeywordsSoft.Program
             cbParserSelect.SelectedIndex = 0;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        public void LoadDataGridViewCategoryKeys()
         {
-            var confirmResult = MessageBox.Show("Are you sure to delete this item ??",
-                                     "Confirm Delete!!",
-                                     MessageBoxButtons.YesNo);
-            if (confirmResult == DialogResult.Yes)
+            ckBox = new CheckBox();
+            Rectangle rect = this.dataGridViewCategoryKeys.GetCellDisplayRectangle(0, -1, true);
+            ckBox.Size = new Size(18, 18);
+            ckBox.BackColor = Color.Transparent;
+            ckBox.Location = new Point() { X = rect.Location.X + 11, Y = rect.Location.Y + 3 };
+            ckBox.CheckedChanged += new EventHandler(ckBox_CheckedChanged);
+            this.dataGridViewCategoryKeys.Controls.Add(ckBox);
+        }
+
+        public void ResetForm()
+        {
+            labelCategorySelected.Text = null;
+            currentCategory = null;
+            btnDeleteCategory.Visible = false;
+            cbParserSelect.SelectedIndex = 0;
+            LoadMenu();
+        }
+
+        private void ckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            for (int j = 0; j < this.dataGridViewCategoryKeys.RowCount; j++)
             {
-                // If 'Yes', do something here.
+                this.dataGridViewCategoryKeys[0, j].Value = this.ckBox.Checked;
             }
-            else
-            {
-                // If 'No', do something here.
-            }
+            this.dataGridViewCategoryKeys.EndEdit();
         }
 
         private void categoryMenuItem_Click(object sender, EventArgs e)
@@ -125,17 +142,24 @@ namespace KeywordsSoft.Program
             }
             else
             {
-                previousCategory = currentCategory;
-                currentCategory = item.Text;
-
                 actionMenu.Enabled = true;
+
+                previousCategory = currentCategory;
                 if (!string.IsNullOrEmpty(previousCategory))
                     this.actionMenu_moveItem.DropDownItems[$"actionMenu_moveItem_{previousCategory}"].Enabled = true;
+
+                currentCategory = item.Text;
                 this.actionMenu_moveItem.DropDownItems[$"actionMenu_moveItem_{currentCategory}"].Enabled = false;
 
-                categoryFilter = item.Text;
-                labelCategorySelected.Text = categoryFilter;
+                labelCategorySelected.Text = currentCategory;
+                btnDeleteCategory.Visible = true;
             }
+        }
+
+        private void actionMenu_addKeys_Click(object sender, EventArgs e)
+        {
+            var formAddKeys = new AddKeys();
+            formAddKeys.ShowDialog(this);
         }
 
         private void actionMenuParserItem_Click(object sender, EventArgs e)
@@ -148,5 +172,18 @@ namespace KeywordsSoft.Program
             ToolStripItem item = sender as ToolStripItem;
             
         }
+
+        private void btnDeleteCategory_Click(object sender, EventArgs e)
+        {
+            var confirmResult = MessageBox.Show($"Вы уверены, что хотите удалить категорию '{currentCategory}'?", "Удаление категории!", MessageBoxButtons.YesNo);
+
+            if (confirmResult == DialogResult.Yes)
+            {
+                new DatabaseHelper().DeleteCategoryDatabases(currentCategory);
+                ResetForm();
+            }
+        }
+
+        
     }
 }

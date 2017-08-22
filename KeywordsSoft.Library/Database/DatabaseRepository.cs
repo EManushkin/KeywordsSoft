@@ -129,5 +129,59 @@ namespace KeywordsSoft.Library.Database
             }
             return list;
         }
+
+        public bool Add<T>(string path, string name, List<string> values) where T : class, new()
+        {
+            if (File.Exists(path + name + ".db"))
+            {
+                try
+                {
+                    using (var connection = new SQLiteConnection(GetConnectionString(path + name)))
+                    {
+                        T obj = default(T);
+
+                        connection.Open();
+
+                        using (SQLiteCommand sqLiteCommand = new SQLiteCommand())
+                        {
+                            sqLiteCommand.CommandType = CommandType.Text;
+                            sqLiteCommand.CommandTimeout = 10;
+                            sqLiteCommand.Connection = connection;
+
+                            string types = "";
+                            List<PropertyInfo> properties = new List<PropertyInfo>(); 
+                            obj = Activator.CreateInstance<T>();
+                            foreach (PropertyInfo prop in obj.GetType().GetProperties())
+                            {
+                                types = string.IsNullOrEmpty(types) ? "" : types + ", ";
+                                if (prop.Name != "id")
+                                {
+                                    properties.Add(prop);
+                                    types += prop.Name;
+                                }
+                            }
+
+                            StringBuilder val = new StringBuilder();
+                            foreach (var itemVal in values)
+                            {
+                                val.Append(itemVal + ", ");
+                            }
+
+                            val.Remove(val.Length - 2, 2);
+
+                            sqLiteCommand.CommandText = $"INSERT INTO {typeof(T).Name} ({types}) VALUES {val};";
+                            sqLiteCommand.ExecuteNonQuery();
+                        }
+
+                        connection.Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

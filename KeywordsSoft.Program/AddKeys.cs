@@ -1,10 +1,11 @@
 ﻿using KeywordsSoft.Library.Helpers;
-using KeywordsSoft.Program;
+using KeywordsSoft.Library.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -13,21 +14,16 @@ using System.Windows.Forms;
 
 namespace KeywordsSoft.Program
 {
-    public partial class AddCategory : Form
+    public partial class AddKeys : Form
     {
         private Color labelBorderColor { get; set; }
 
-        public AddCategory()
+        public AddKeys()
         {
             InitializeComponent();
 
-            tbCategoryName.Multiline = true;
-            Size size = new Size(240, 24);
-            tbCategoryName.MinimumSize = size;
-            tbCategoryName.Size = size;
-            tbCategoryName.Multiline = false;
-
-            cbLanguageSelect.SelectedIndex = 0;
+            cbCategorySelect.Items.AddRange(new DatabaseHelper().GetСategories());
+            cbCategorySelect.SelectedIndex = 0;
         }
 
         private void Validation(string message, Color color)
@@ -46,34 +42,40 @@ namespace KeywordsSoft.Program
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(tbCategoryName.Text))
+            var category = cbCategorySelect.SelectedItem.ToString();
+            if (category == "Выбор категории")
             {
-                Validation("Введите название категории!", Color.Red);
+                Validation("Выберите категорию из выпадающего списка!", Color.Red);
                 return;
             }
 
-            var language = cbLanguageSelect.SelectedItem.ToString();
-            if (language == "Язык")
+            List<Library.Entities.Keys> listEntity = new List<Library.Entities.Keys>();
+            List<string> values = new List<string>();
+            using (StringReader reader = new StringReader(rtbKeys.Text))
             {
-                Validation("Выберите язык из выпадающего списка!", Color.Red);
-                return;
+                string line;
+                string val; 
+                while ((line = reader.ReadLine()) != null)
+                {
+                    values.Add($"('{line}', '{DBNull.Value}')");
+                    listEntity.Add(new Library.Entities.Keys { name = line, good = true });
+                }
             }
 
-            if (!new DatabaseHelper().CreateCategoryDatabases($"{language}_{tbCategoryName.Text}"))
+            if (new KeysHelper().Add(category, values))
             {
                 Validation("Категория с таким названием и языком уже существует!", Color.Red);
                 return;
             }
             else
             {
-                Validation($"Категория {language}_{tbCategoryName.Text} добавлена.", Color.Green);
+                Validation($"Ключи добавлены", Color.Green);
 
                 btnAdd.Visible = false;
                 btnCancel.Visible = false;
 
                 Thread.Sleep(2000);
 
-                Program.mainForm.LoadMenu();
                 this.Close();
             }
         }

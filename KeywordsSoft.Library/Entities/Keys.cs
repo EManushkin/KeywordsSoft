@@ -12,6 +12,6 @@ namespace KeywordsSoft.Library.Entities
 
         public string name { get; set; }
 
-        public bool good { get; set; }
+        public bool? good { get; set; }
     }
 }
