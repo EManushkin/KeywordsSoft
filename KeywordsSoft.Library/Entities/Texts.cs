@@ -7,13 +7,10 @@ using System.Threading.Tasks;
 
 namespace KeywordsSoft.Library.Entities
 {
-    public class Keys
+    public class Texts : BasePostfixType
     {
-        [Browsable(false)]
-        public long id { get; set; }
+        public string spin { get; set; }
 
-        public string name { get; set; }
-
-        public bool? good { get; set; }
+        public string url { get; set; }
     }
 }

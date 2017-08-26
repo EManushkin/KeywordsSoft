@@ -68,6 +68,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Database\DatabaseRepository.cs" />
+    <Compile Include="Entities\BasePostfixType.cs" />
+    <Compile Include="Entities\Videos.cs" />
+    <Compile Include="Entities\Suggests.cs" />
+    <Compile Include="Entities\Snippets.cs" />
+    <Compile Include="Entities\Texts.cs" />
+    <Compile Include="Entities\Images.cs" />
+    <Compile Include="Entities\MainTable.cs" />
     <Compile Include="Entities\Parsers.cs" />
     <Compile Include="Entities\Keys.cs" />
     <Compile Include="Helpers\DatabaseHelper.cs" />

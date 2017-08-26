@@ -16,6 +16,8 @@ namespace KeywordsSoft.Library.Database
 {
     public class DatabaseRepository
     {
+        private const string limit = "2000000";
+
         public DatabaseRepository()
         {
         }
@@ -83,15 +85,15 @@ namespace KeywordsSoft.Library.Database
             return null;
         }
 
-        public List<T> Select<T>(string path, string name) where T : class, new()
+        public List<T> Select<T>(string path, string dbName) where T : class, new()
         {
             List<T> list = new List<T>();
 
-            if (File.Exists(path + name + ".db"))
+            if (File.Exists(path + dbName + ".db"))
             {
                 try
                 {
-                    using (var connection = new SQLiteConnection(GetConnectionString(path + name)))
+                    using (var connection = new SQLiteConnection(GetConnectionString(path + dbName)))
                     {
                         
                         T obj = default(T);
@@ -103,7 +105,7 @@ namespace KeywordsSoft.Library.Database
                             sqLiteCommand.CommandType = CommandType.Text;
                             sqLiteCommand.CommandTimeout = 10;
                             sqLiteCommand.Connection = connection;
-                            sqLiteCommand.CommandText = $"SELECT * FROM {typeof(T).Name}";
+                            sqLiteCommand.CommandText = $"SELECT * FROM {typeof(T).Name} LIMIT {limit}";
 
                             SQLiteDataReader reader = sqLiteCommand.ExecuteReader();
                             while (reader.Read())
@@ -113,7 +115,14 @@ namespace KeywordsSoft.Library.Database
                                 {
                                     if (!object.Equals(reader[prop.Name], DBNull.Value))
                                     {
-                                        prop.SetValue(obj, reader[prop.Name], null);
+                                        if (prop.PropertyType.Equals(typeof(bool?)))
+                                        {
+                                            prop.SetValue(obj, object.Equals(reader[prop.Name], string.Empty) ? (Nullable<bool>)null : Convert.ToBoolean(reader[prop.Name]), null);
+                                        }
+                                        else
+                                        {
+                                            prop.SetValue(obj, reader[prop.Name] == DBNull.Value ? null : reader[prop.Name], null);
+                                        }
                                     }
                                 }
                                 list.Add(obj);
@@ -130,13 +139,13 @@ namespace KeywordsSoft.Library.Database
             return list;
         }
 
-        public bool Add<T>(string path, string name, List<string> values) where T : class, new()
+        public bool Add<T>(string path, string dbName, List<string> values) where T : class, new()
         {
-            if (File.Exists(path + name + ".db"))
+            if (File.Exists(path + dbName + ".db"))
             {
                 try
                 {
-                    using (var connection = new SQLiteConnection(GetConnectionString(path + name)))
+                    using (var connection = new SQLiteConnection(GetConnectionString(path + dbName)))
                     {
                         T obj = default(T);
 

@@ -18,17 +18,20 @@ namespace KeywordsSoft.Program
         public string currentCategory { get; set; }
         public string previousCategory { get; set; }
 
+        public List<MainTable> MainTableList { get; set; }
+        public List<Parsers> ParsersList { get; set; }
+
         private CheckBox ckBox { get; set; }
 
         public MainForm()
         {
             InitializeComponent();
 
+            ParsersList = new ParsersHelper().Select();
+
             LoadMenu();
             LoadMenuParsers();
             LoadDataGridViewCategoryKeys();
-
-
         }
 
         public void LoadMenu()
@@ -67,8 +70,7 @@ namespace KeywordsSoft.Program
 
         public void LoadMenuParsers()
         {
-            var parsers = new ParsersHelper().Select();
-            if (parsers == null)
+            if (ParsersList == null)
             {
                 return;
             }
@@ -79,7 +81,7 @@ namespace KeywordsSoft.Program
                 menuItem.DropDownItems.Clear();
 
                 ToolStripItem troolStripItem;
-                foreach (var item in parsers.Where(x => x.type == type))
+                foreach (var item in ParsersList.Where(x => x.type == type))
                 {
                     troolStripItem = new ToolStripMenuItem();
                     troolStripItem.Name = $"actionMenu_parseItem_{type}_parser_{item.name}";
@@ -98,12 +100,14 @@ namespace KeywordsSoft.Program
                 menuItem.DropDownItems.Add(troolStripItem);
             }
 
-            cbParserSelect.Items.AddRange(parsers.Select(x => $"{x.name}_{x.type}").OrderBy(x => x).ToArray());
+            cbParserSelect.Items.AddRange(ParsersList.Select(x => $"{x.name}_{x.type}").OrderBy(x => x).ToArray());
             cbParserSelect.SelectedIndex = 0;
         }
 
         public void LoadDataGridViewCategoryKeys()
         {
+            this.dataGridViewCategoryKeys.AutoGenerateColumns = false;
+
             ckBox = new CheckBox();
             Rectangle rect = this.dataGridViewCategoryKeys.GetCellDisplayRectangle(0, -1, true);
             ckBox.Size = new Size(18, 18);
@@ -120,6 +124,13 @@ namespace KeywordsSoft.Program
             btnDeleteCategory.Visible = false;
             cbParserSelect.SelectedIndex = 0;
             LoadMenu();
+        }
+
+        public void KeysActionEnabled(bool state)
+        {
+            actionMenu_moveItem.Enabled = state;
+            actionMenu_parseItem.Enabled = state;
+            actionMenu_deleteItem.Enabled = state;
         }
 
         private void ckBox_CheckedChanged(object sender, EventArgs e)
@@ -142,7 +153,7 @@ namespace KeywordsSoft.Program
             }
             else
             {
-                actionMenu.Enabled = true;
+                KeysActionEnabled(true);
 
                 previousCategory = currentCategory;
                 if (!string.IsNullOrEmpty(previousCategory))
@@ -153,6 +164,10 @@ namespace KeywordsSoft.Program
 
                 labelCategorySelected.Text = currentCategory;
                 btnDeleteCategory.Visible = true;
+
+                MainTableList = new DatabaseHelper().Select(currentCategory);
+
+                dataGridViewCategoryKeys.DataSource = MainTableList;
             }
         }
 
@@ -164,7 +179,11 @@ namespace KeywordsSoft.Program
 
         private void actionMenuParserItem_Click(object sender, EventArgs e)
         {
-            
+            ToolStripItem item = sender as ToolStripItem;
+
+            var parser = ParsersList.FirstOrDefault(p => p.name == item.Text && p.type == item.OwnerItem.Text);
+            var testKeyIdsList = new List<string>() { "1", "2", "3", "4" };
+            new ParsersHelper().Parse(testKeyIdsList, parser, currentCategory);
         }
 
         private void actionMenu_moveItem_Click(object sender, EventArgs e)

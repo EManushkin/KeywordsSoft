@@ -1,4 +1,5 @@
 ﻿using KeywordsSoft.Library.Database;
+using KeywordsSoft.Library.Entities;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -25,14 +26,19 @@ namespace KeywordsSoft.Library.Helpers
             Database = new DatabaseRepository();
         }
 
-        public bool CreateDatabase(string name)
+        public bool CreateDatabase(string dbName)
         {
-            return Database.Create(Path, name + "_suggests", CreateCommand);
+            return Database.Create(Path, dbName + "_suggests", CreateCommand);
         }
 
-        public void DeleteDatabase(string name)
+        public void DeleteDatabase(string dbName)
         {
-            Database.Delete(Path + name + "_suggests");
+            Database.Delete(Path + dbName + "_suggests");
+        }
+
+        public bool Add(string dbName, List<string> values)
+        {
+            return Database.Add<Suggests>(Path, dbName + "_suggests", values);
         }
     }
 }

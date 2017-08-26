@@ -49,25 +49,17 @@ namespace KeywordsSoft.Program
                 return;
             }
 
-            List<Library.Entities.Keys> listEntity = new List<Library.Entities.Keys>();
             List<string> values = new List<string>();
             using (StringReader reader = new StringReader(rtbKeys.Text))
             {
                 string line;
-                string val; 
                 while ((line = reader.ReadLine()) != null)
                 {
-                    values.Add($"('{line}', '{DBNull.Value}')");
-                    listEntity.Add(new Library.Entities.Keys { name = line, good = true });
+                    values.Add($"('{line}', '{true}')");
                 }
             }
 
             if (new KeysHelper().Add(category, values))
-            {
-                Validation("Категория с таким названием и языком уже существует!", Color.Red);
-                return;
-            }
-            else
             {
                 Validation($"Ключи добавлены", Color.Green);
 
@@ -77,6 +69,11 @@ namespace KeywordsSoft.Program
                 Thread.Sleep(2000);
 
                 this.Close();
+            }
+            else
+            {
+                Validation("Произошла ошибка при добавлении ключей. Попробуйте снова.", Color.Red);
+                return;
             }
         }
 

@@ -16,7 +16,7 @@ namespace KeywordsSoft.Library.Helpers
         private const string CreateCommand = @"CREATE TABLE Keys(
                                                   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
                                                   name  TEXT,
-                                                  good INTEGER);
+                                                  good TEXT);
                                                CREATE TABLE variations(
                                                   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
                                                   name TEXT);";
@@ -28,19 +28,24 @@ namespace KeywordsSoft.Library.Helpers
             Database = new DatabaseRepository();
         }
 
-        public bool CreateDatabase(string name)
+        public bool CreateDatabase(string dbName)
         {
-            return Database.Create(Path, name, CreateCommand);
+            return Database.Create(Path, dbName, CreateCommand);
         }
 
-        public void DeleteDatabase(string name)
+        public void DeleteDatabase(string dbName)
         {
-            Database.Delete(Path + name);
+            Database.Delete(Path + dbName);
         }
 
-        public bool Add(string name, List<string> entity)
+        public bool Add(string dbName, List<string> entity)
         {
-            return Database.Add<Keys>(Path, name, entity);
+            return Database.Add<Keys>(Path, dbName, entity);
+        }
+
+        public List<Keys> Select(string dbName)
+        {
+            return Database.Select<Keys>(Path, dbName);
         }
     }
 }

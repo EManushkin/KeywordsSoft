@@ -27,14 +27,14 @@ namespace KeywordsSoft.Library.Helpers
             Database = new DatabaseRepository();
         }
 
-        public bool CreateDatabase(string name)
+        public bool CreateDatabase(string dbName)
         {
-            return Database.Create(Path, name + "_clusters", CreateCommand);
+            return Database.Create(Path, dbName + "_clusters", CreateCommand);
         }
 
-        public void DeleteDatabase(string name)
+        public void DeleteDatabase(string dbName)
         {
-            Database.Delete(Path + name + "_clusters");
+            Database.Delete(Path + dbName + "_clusters");
         }
     }
 }

@@ -33,12 +33,25 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.categoryMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.actionMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionMenu_addKeys = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.actionMenu_parseItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionMenu_parseItem_texts = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionMenu_parseItem_images = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionMenu_parseItem_videos = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionMenu_parseItem_suggests = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionMenu_parseItem_snippets = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.actionMenu_parseItem_all = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionMenu_moveItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.actionMenu_deleteItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelCategory = new System.Windows.Forms.Label();
             this.labelCategorySelected = new System.Windows.Forms.Label();
             this.labelParser = new System.Windows.Forms.Label();
             this.cbParserSelect = new System.Windows.Forms.ComboBox();
             this.dataGridViewCategoryKeys = new System.Windows.Forms.DataGridView();
+            this.btnDeleteCategory = new System.Windows.Forms.Button();
             this.colKeyCheck = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.colKeyword = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colGood = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -50,19 +63,6 @@
             this.colSnippets = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colSuggests = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colVideos = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnDeleteCategory = new System.Windows.Forms.Button();
-            this.actionMenu_addKeys = new System.Windows.Forms.ToolStripMenuItem();
-            this.actionMenu_parseItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.actionMenu_parseItem_texts = new System.Windows.Forms.ToolStripMenuItem();
-            this.actionMenu_parseItem_images = new System.Windows.Forms.ToolStripMenuItem();
-            this.actionMenu_parseItem_videos = new System.Windows.Forms.ToolStripMenuItem();
-            this.actionMenu_parseItem_suggests = new System.Windows.Forms.ToolStripMenuItem();
-            this.actionMenu_parseItem_snippets = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.actionMenu_parseItem_all = new System.Windows.Forms.ToolStripMenuItem();
-            this.actionMenu_moveItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.actionMenu_deleteItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCategoryKeys)).BeginInit();
             this.SuspendLayout();
@@ -96,16 +96,101 @@
             this.actionMenu_moveItem,
             this.toolStripSeparator1,
             this.actionMenu_deleteItem});
-            this.actionMenu.Enabled = false;
             this.actionMenu.Font = new System.Drawing.Font("Trebuchet MS", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.actionMenu.Name = "actionMenu";
             this.actionMenu.Size = new System.Drawing.Size(87, 24);
             this.actionMenu.Text = "Действие";
             // 
+            // actionMenu_addKeys
+            // 
+            this.actionMenu_addKeys.Image = global::KeywordsSoft.Program.Properties.Resources.add_key_icon;
+            this.actionMenu_addKeys.Name = "actionMenu_addKeys";
+            this.actionMenu_addKeys.Size = new System.Drawing.Size(238, 24);
+            this.actionMenu_addKeys.Text = "Добавить ключи";
+            this.actionMenu_addKeys.Click += new System.EventHandler(this.actionMenu_addKeys_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(235, 6);
+            // 
+            // actionMenu_parseItem
+            // 
+            this.actionMenu_parseItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.actionMenu_parseItem_texts,
+            this.actionMenu_parseItem_images,
+            this.actionMenu_parseItem_videos,
+            this.actionMenu_parseItem_suggests,
+            this.actionMenu_parseItem_snippets,
+            this.toolStripSeparator2,
+            this.actionMenu_parseItem_all});
+            this.actionMenu_parseItem.Enabled = false;
+            this.actionMenu_parseItem.Image = global::KeywordsSoft.Program.Properties.Resources.parse_icon;
+            this.actionMenu_parseItem.Name = "actionMenu_parseItem";
+            this.actionMenu_parseItem.Size = new System.Drawing.Size(238, 24);
+            this.actionMenu_parseItem.Text = "Спарсить информацию";
+            // 
+            // actionMenu_parseItem_texts
+            // 
+            this.actionMenu_parseItem_texts.Name = "actionMenu_parseItem_texts";
+            this.actionMenu_parseItem_texts.Size = new System.Drawing.Size(152, 24);
+            this.actionMenu_parseItem_texts.Text = "texts";
+            // 
+            // actionMenu_parseItem_images
+            // 
+            this.actionMenu_parseItem_images.Name = "actionMenu_parseItem_images";
+            this.actionMenu_parseItem_images.Size = new System.Drawing.Size(152, 24);
+            this.actionMenu_parseItem_images.Text = "images";
+            // 
+            // actionMenu_parseItem_videos
+            // 
+            this.actionMenu_parseItem_videos.Name = "actionMenu_parseItem_videos";
+            this.actionMenu_parseItem_videos.Size = new System.Drawing.Size(152, 24);
+            this.actionMenu_parseItem_videos.Text = "videos";
+            // 
+            // actionMenu_parseItem_suggests
+            // 
+            this.actionMenu_parseItem_suggests.Name = "actionMenu_parseItem_suggests";
+            this.actionMenu_parseItem_suggests.Size = new System.Drawing.Size(152, 24);
+            this.actionMenu_parseItem_suggests.Text = "suggests";
+            // 
+            // actionMenu_parseItem_snippets
+            // 
+            this.actionMenu_parseItem_snippets.Name = "actionMenu_parseItem_snippets";
+            this.actionMenu_parseItem_snippets.Size = new System.Drawing.Size(152, 24);
+            this.actionMenu_parseItem_snippets.Text = "snippets";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
+            // 
+            // actionMenu_parseItem_all
+            // 
+            this.actionMenu_parseItem_all.Name = "actionMenu_parseItem_all";
+            this.actionMenu_parseItem_all.Size = new System.Drawing.Size(152, 24);
+            this.actionMenu_parseItem_all.Text = "All...";
+            // 
+            // actionMenu_moveItem
+            // 
+            this.actionMenu_moveItem.Enabled = false;
+            this.actionMenu_moveItem.Image = global::KeywordsSoft.Program.Properties.Resources.move_icon;
+            this.actionMenu_moveItem.Name = "actionMenu_moveItem";
+            this.actionMenu_moveItem.Size = new System.Drawing.Size(238, 24);
+            this.actionMenu_moveItem.Text = "Перенести";
+            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(235, 6);
+            // 
+            // actionMenu_deleteItem
+            // 
+            this.actionMenu_deleteItem.Enabled = false;
+            this.actionMenu_deleteItem.Image = global::KeywordsSoft.Program.Properties.Resources.delete_icon;
+            this.actionMenu_deleteItem.Name = "actionMenu_deleteItem";
+            this.actionMenu_deleteItem.Size = new System.Drawing.Size(238, 24);
+            this.actionMenu_deleteItem.Text = "Удалить ключи";
             // 
             // labelCategory
             // 
@@ -186,90 +271,6 @@
             this.dataGridViewCategoryKeys.Size = new System.Drawing.Size(900, 422);
             this.dataGridViewCategoryKeys.TabIndex = 6;
             // 
-            // colKeyCheck
-            // 
-            this.colKeyCheck.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.colKeyCheck.FillWeight = 39.0863F;
-            this.colKeyCheck.Frozen = true;
-            this.colKeyCheck.HeaderText = "";
-            this.colKeyCheck.Name = "colKeyCheck";
-            this.colKeyCheck.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.colKeyCheck.Width = 32;
-            // 
-            // colKeyword
-            // 
-            this.colKeyword.FillWeight = 106.0914F;
-            this.colKeyword.HeaderText = "keyword";
-            this.colKeyword.Name = "colKeyword";
-            // 
-            // colGood
-            // 
-            this.colGood.FillWeight = 106.0914F;
-            this.colGood.HeaderText = "good";
-            this.colGood.Name = "colGood";
-            this.colGood.ReadOnly = true;
-            // 
-            // colCluster
-            // 
-            this.colCluster.FillWeight = 106.0914F;
-            this.colCluster.HeaderText = "cluster";
-            this.colCluster.Name = "colCluster";
-            this.colCluster.ReadOnly = true;
-            // 
-            // colUrls
-            // 
-            this.colUrls.FillWeight = 106.0914F;
-            this.colUrls.HeaderText = "urls";
-            this.colUrls.Name = "colUrls";
-            this.colUrls.ReadOnly = true;
-            // 
-            // colTexts
-            // 
-            this.colTexts.FillWeight = 106.0914F;
-            this.colTexts.HeaderText = "texts";
-            this.colTexts.Name = "colTexts";
-            this.colTexts.ReadOnly = true;
-            // 
-            // colSpintexts
-            // 
-            this.colSpintexts.FillWeight = 106.0914F;
-            this.colSpintexts.HeaderText = "spintexts";
-            this.colSpintexts.Name = "colSpintexts";
-            this.colSpintexts.ReadOnly = true;
-            // 
-            // colImages
-            // 
-            this.colImages.FillWeight = 106.0914F;
-            this.colImages.HeaderText = "images";
-            this.colImages.Name = "colImages";
-            this.colImages.ReadOnly = true;
-            // 
-            // colSnippets
-            // 
-            this.colSnippets.FillWeight = 106.0914F;
-            this.colSnippets.HeaderText = "snippets";
-            this.colSnippets.Name = "colSnippets";
-            this.colSnippets.ReadOnly = true;
-            // 
-            // colSuggests
-            // 
-            this.colSuggests.FillWeight = 106.0914F;
-            this.colSuggests.HeaderText = "suggests";
-            this.colSuggests.Name = "colSuggests";
-            this.colSuggests.ReadOnly = true;
-            // 
-            // colVideos
-            // 
-            this.colVideos.FillWeight = 106.0914F;
-            this.colVideos.HeaderText = "videos";
-            this.colVideos.Name = "colVideos";
-            this.colVideos.ReadOnly = true;
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(235, 6);
-            // 
             // btnDeleteCategory
             // 
             this.btnDeleteCategory.BackColor = System.Drawing.Color.Transparent;
@@ -287,83 +288,94 @@
             this.btnDeleteCategory.Visible = false;
             this.btnDeleteCategory.Click += new System.EventHandler(this.btnDeleteCategory_Click);
             // 
-            // actionMenu_addKeys
+            // colKeyCheck
             // 
-            this.actionMenu_addKeys.Image = global::KeywordsSoft.Program.Properties.Resources.add_key_icon;
-            this.actionMenu_addKeys.Name = "actionMenu_addKeys";
-            this.actionMenu_addKeys.Size = new System.Drawing.Size(238, 24);
-            this.actionMenu_addKeys.Text = "Добавить ключи";
-            this.actionMenu_addKeys.Click += new System.EventHandler(this.actionMenu_addKeys_Click);
+            this.colKeyCheck.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.colKeyCheck.FillWeight = 39.0863F;
+            this.colKeyCheck.Frozen = true;
+            this.colKeyCheck.HeaderText = "";
+            this.colKeyCheck.Name = "colKeyCheck";
+            this.colKeyCheck.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.colKeyCheck.Width = 32;
             // 
-            // actionMenu_parseItem
+            // colKeyword
             // 
-            this.actionMenu_parseItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.actionMenu_parseItem_texts,
-            this.actionMenu_parseItem_images,
-            this.actionMenu_parseItem_videos,
-            this.actionMenu_parseItem_suggests,
-            this.actionMenu_parseItem_snippets,
-            this.toolStripSeparator2,
-            this.actionMenu_parseItem_all});
-            this.actionMenu_parseItem.Image = global::KeywordsSoft.Program.Properties.Resources.parse_icon;
-            this.actionMenu_parseItem.Name = "actionMenu_parseItem";
-            this.actionMenu_parseItem.Size = new System.Drawing.Size(238, 24);
-            this.actionMenu_parseItem.Text = "Спарсить информацию";
+            this.colKeyword.DataPropertyName = "name";
+            this.colKeyword.FillWeight = 225.0424F;
+            this.colKeyword.HeaderText = "keyword";
+            this.colKeyword.Name = "colKeyword";
             // 
-            // actionMenu_parseItem_texts
+            // colGood
             // 
-            this.actionMenu_parseItem_texts.Name = "actionMenu_parseItem_texts";
-            this.actionMenu_parseItem_texts.Size = new System.Drawing.Size(134, 24);
-            this.actionMenu_parseItem_texts.Text = "texts";
+            this.colGood.DataPropertyName = "good";
+            this.colGood.FillWeight = 92.87463F;
+            this.colGood.HeaderText = "good";
+            this.colGood.Name = "colGood";
+            this.colGood.ReadOnly = true;
             // 
-            // actionMenu_parseItem_images
+            // colCluster
             // 
-            this.actionMenu_parseItem_images.Name = "actionMenu_parseItem_images";
-            this.actionMenu_parseItem_images.Size = new System.Drawing.Size(134, 24);
-            this.actionMenu_parseItem_images.Text = "images";
+            this.colCluster.DataPropertyName = "cluster";
+            this.colCluster.FillWeight = 92.87463F;
+            this.colCluster.HeaderText = "cluster";
+            this.colCluster.Name = "colCluster";
+            this.colCluster.ReadOnly = true;
             // 
-            // actionMenu_parseItem_videos
+            // colUrls
             // 
-            this.actionMenu_parseItem_videos.Name = "actionMenu_parseItem_videos";
-            this.actionMenu_parseItem_videos.Size = new System.Drawing.Size(134, 24);
-            this.actionMenu_parseItem_videos.Text = "videos";
+            this.colUrls.DataPropertyName = "urls";
+            this.colUrls.FillWeight = 92.87463F;
+            this.colUrls.HeaderText = "urls";
+            this.colUrls.Name = "colUrls";
+            this.colUrls.ReadOnly = true;
             // 
-            // actionMenu_parseItem_suggests
+            // colTexts
             // 
-            this.actionMenu_parseItem_suggests.Name = "actionMenu_parseItem_suggests";
-            this.actionMenu_parseItem_suggests.Size = new System.Drawing.Size(134, 24);
-            this.actionMenu_parseItem_suggests.Text = "suggests";
+            this.colTexts.DataPropertyName = "texts";
+            this.colTexts.FillWeight = 92.87463F;
+            this.colTexts.HeaderText = "texts";
+            this.colTexts.Name = "colTexts";
+            this.colTexts.ReadOnly = true;
             // 
-            // actionMenu_parseItem_snippets
+            // colSpintexts
             // 
-            this.actionMenu_parseItem_snippets.Name = "actionMenu_parseItem_snippets";
-            this.actionMenu_parseItem_snippets.Size = new System.Drawing.Size(134, 24);
-            this.actionMenu_parseItem_snippets.Text = "snippets";
+            this.colSpintexts.DataPropertyName = "spintexts";
+            this.colSpintexts.FillWeight = 92.87463F;
+            this.colSpintexts.HeaderText = "spintexts";
+            this.colSpintexts.Name = "colSpintexts";
+            this.colSpintexts.ReadOnly = true;
             // 
-            // toolStripSeparator2
+            // colImages
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(131, 6);
+            this.colImages.DataPropertyName = "images";
+            this.colImages.FillWeight = 92.87463F;
+            this.colImages.HeaderText = "images";
+            this.colImages.Name = "colImages";
+            this.colImages.ReadOnly = true;
             // 
-            // actionMenu_parseItem_all
+            // colSnippets
             // 
-            this.actionMenu_parseItem_all.Name = "actionMenu_parseItem_all";
-            this.actionMenu_parseItem_all.Size = new System.Drawing.Size(134, 24);
-            this.actionMenu_parseItem_all.Text = "All...";
+            this.colSnippets.DataPropertyName = "snippets";
+            this.colSnippets.FillWeight = 92.87463F;
+            this.colSnippets.HeaderText = "snippets";
+            this.colSnippets.Name = "colSnippets";
+            this.colSnippets.ReadOnly = true;
             // 
-            // actionMenu_moveItem
+            // colSuggests
             // 
-            this.actionMenu_moveItem.Image = global::KeywordsSoft.Program.Properties.Resources.move_icon;
-            this.actionMenu_moveItem.Name = "actionMenu_moveItem";
-            this.actionMenu_moveItem.Size = new System.Drawing.Size(238, 24);
-            this.actionMenu_moveItem.Text = "Перенести";
+            this.colSuggests.DataPropertyName = "suggests";
+            this.colSuggests.FillWeight = 92.87463F;
+            this.colSuggests.HeaderText = "suggests";
+            this.colSuggests.Name = "colSuggests";
+            this.colSuggests.ReadOnly = true;
             // 
-            // actionMenu_deleteItem
+            // colVideos
             // 
-            this.actionMenu_deleteItem.Image = global::KeywordsSoft.Program.Properties.Resources.delete_icon;
-            this.actionMenu_deleteItem.Name = "actionMenu_deleteItem";
-            this.actionMenu_deleteItem.Size = new System.Drawing.Size(238, 24);
-            this.actionMenu_deleteItem.Text = "Удалить ключи";
+            this.colVideos.DataPropertyName = "videos";
+            this.colVideos.FillWeight = 92.87463F;
+            this.colVideos.HeaderText = "videos";
+            this.colVideos.Name = "colVideos";
+            this.colVideos.ReadOnly = true;
             // 
             // MainForm
             // 
@@ -413,6 +425,8 @@
         private System.Windows.Forms.Label labelParser;
         private System.Windows.Forms.ComboBox cbParserSelect;
         private System.Windows.Forms.DataGridView dataGridViewCategoryKeys;
+        private System.Windows.Forms.ToolStripMenuItem actionMenu_addKeys;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.DataGridViewCheckBoxColumn colKeyCheck;
         private System.Windows.Forms.DataGridViewTextBoxColumn colKeyword;
         private System.Windows.Forms.DataGridViewTextBoxColumn colGood;
@@ -424,8 +438,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colSnippets;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSuggests;
         private System.Windows.Forms.DataGridViewTextBoxColumn colVideos;
-        private System.Windows.Forms.ToolStripMenuItem actionMenu_addKeys;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
     }
 }
 
