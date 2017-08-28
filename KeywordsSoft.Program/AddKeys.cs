@@ -68,6 +68,8 @@ namespace KeywordsSoft.Program
 
                 Thread.Sleep(2000);
 
+                Program.mainForm.LoadDataGridViewCategoryKeys();
+
                 this.Close();
             }
             else

@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="Database\DatabaseRepository.cs" />
     <Compile Include="Entities\BasePostfixType.cs" />
+    <Compile Include="Entities\Clusters.cs" />
     <Compile Include="Entities\Videos.cs" />
     <Compile Include="Entities\Suggests.cs" />
     <Compile Include="Entities\Snippets.cs" />

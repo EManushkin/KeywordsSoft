@@ -51,8 +51,8 @@
             this.labelParser = new System.Windows.Forms.Label();
             this.cbParserSelect = new System.Windows.Forms.ComboBox();
             this.dataGridViewCategoryKeys = new System.Windows.Forms.DataGridView();
-            this.btnDeleteCategory = new System.Windows.Forms.Button();
             this.colKeyCheck = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.colID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colKeyword = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colGood = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCluster = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -63,6 +63,7 @@
             this.colSnippets = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colSuggests = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colVideos = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnDeleteCategory = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCategoryKeys)).BeginInit();
             this.SuspendLayout();
@@ -133,42 +134,42 @@
             // actionMenu_parseItem_texts
             // 
             this.actionMenu_parseItem_texts.Name = "actionMenu_parseItem_texts";
-            this.actionMenu_parseItem_texts.Size = new System.Drawing.Size(152, 24);
+            this.actionMenu_parseItem_texts.Size = new System.Drawing.Size(134, 24);
             this.actionMenu_parseItem_texts.Text = "texts";
             // 
             // actionMenu_parseItem_images
             // 
             this.actionMenu_parseItem_images.Name = "actionMenu_parseItem_images";
-            this.actionMenu_parseItem_images.Size = new System.Drawing.Size(152, 24);
+            this.actionMenu_parseItem_images.Size = new System.Drawing.Size(134, 24);
             this.actionMenu_parseItem_images.Text = "images";
             // 
             // actionMenu_parseItem_videos
             // 
             this.actionMenu_parseItem_videos.Name = "actionMenu_parseItem_videos";
-            this.actionMenu_parseItem_videos.Size = new System.Drawing.Size(152, 24);
+            this.actionMenu_parseItem_videos.Size = new System.Drawing.Size(134, 24);
             this.actionMenu_parseItem_videos.Text = "videos";
             // 
             // actionMenu_parseItem_suggests
             // 
             this.actionMenu_parseItem_suggests.Name = "actionMenu_parseItem_suggests";
-            this.actionMenu_parseItem_suggests.Size = new System.Drawing.Size(152, 24);
+            this.actionMenu_parseItem_suggests.Size = new System.Drawing.Size(134, 24);
             this.actionMenu_parseItem_suggests.Text = "suggests";
             // 
             // actionMenu_parseItem_snippets
             // 
             this.actionMenu_parseItem_snippets.Name = "actionMenu_parseItem_snippets";
-            this.actionMenu_parseItem_snippets.Size = new System.Drawing.Size(152, 24);
+            this.actionMenu_parseItem_snippets.Size = new System.Drawing.Size(134, 24);
             this.actionMenu_parseItem_snippets.Text = "snippets";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(131, 6);
             // 
             // actionMenu_parseItem_all
             // 
             this.actionMenu_parseItem_all.Name = "actionMenu_parseItem_all";
-            this.actionMenu_parseItem_all.Size = new System.Drawing.Size(152, 24);
+            this.actionMenu_parseItem_all.Size = new System.Drawing.Size(134, 24);
             this.actionMenu_parseItem_all.Text = "All...";
             // 
             // actionMenu_moveItem
@@ -191,6 +192,7 @@
             this.actionMenu_deleteItem.Name = "actionMenu_deleteItem";
             this.actionMenu_deleteItem.Size = new System.Drawing.Size(238, 24);
             this.actionMenu_deleteItem.Text = "Удалить ключи";
+            this.actionMenu_deleteItem.Click += new System.EventHandler(this.actionMenu_deleteItem_Click);
             // 
             // labelCategory
             // 
@@ -228,19 +230,20 @@
             this.cbParserSelect.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.cbParserSelect.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.cbParserSelect.FormattingEnabled = true;
-            this.cbParserSelect.Items.AddRange(new object[] {
-            "Все"});
             this.cbParserSelect.Location = new System.Drawing.Point(100, 68);
             this.cbParserSelect.Name = "cbParserSelect";
             this.cbParserSelect.Size = new System.Drawing.Size(177, 24);
             this.cbParserSelect.TabIndex = 5;
+            this.cbParserSelect.SelectedValueChanged += new System.EventHandler(this.cbParserSelect_SelectedValueChanged);
             // 
             // dataGridViewCategoryKeys
             // 
+            this.dataGridViewCategoryKeys.AllowUserToAddRows = false;
             this.dataGridViewCategoryKeys.AllowUserToDeleteRows = false;
             this.dataGridViewCategoryKeys.AllowUserToResizeColumns = false;
             this.dataGridViewCategoryKeys.AllowUserToResizeRows = false;
-            this.dataGridViewCategoryKeys.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.dataGridViewCategoryKeys.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridViewCategoryKeys.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
@@ -254,6 +257,7 @@
             this.dataGridViewCategoryKeys.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewCategoryKeys.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colKeyCheck,
+            this.colID,
             this.colKeyword,
             this.colGood,
             this.colCluster,
@@ -271,26 +275,10 @@
             this.dataGridViewCategoryKeys.Size = new System.Drawing.Size(900, 422);
             this.dataGridViewCategoryKeys.TabIndex = 6;
             // 
-            // btnDeleteCategory
-            // 
-            this.btnDeleteCategory.BackColor = System.Drawing.Color.Transparent;
-            this.btnDeleteCategory.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnDeleteCategory.FlatAppearance.BorderColor = System.Drawing.Color.White;
-            this.btnDeleteCategory.FlatAppearance.BorderSize = 0;
-            this.btnDeleteCategory.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDeleteCategory.ForeColor = System.Drawing.Color.Transparent;
-            this.btnDeleteCategory.Image = global::KeywordsSoft.Program.Properties.Resources.delete_button_25;
-            this.btnDeleteCategory.Location = new System.Drawing.Point(100, 37);
-            this.btnDeleteCategory.Name = "btnDeleteCategory";
-            this.btnDeleteCategory.Size = new System.Drawing.Size(25, 25);
-            this.btnDeleteCategory.TabIndex = 0;
-            this.btnDeleteCategory.UseVisualStyleBackColor = false;
-            this.btnDeleteCategory.Visible = false;
-            this.btnDeleteCategory.Click += new System.EventHandler(this.btnDeleteCategory_Click);
-            // 
             // colKeyCheck
             // 
             this.colKeyCheck.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.colKeyCheck.DataPropertyName = "isChecked";
             this.colKeyCheck.FillWeight = 39.0863F;
             this.colKeyCheck.Frozen = true;
             this.colKeyCheck.HeaderText = "";
@@ -298,12 +286,25 @@
             this.colKeyCheck.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.colKeyCheck.Width = 32;
             // 
+            // colID
+            // 
+            this.colID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.colID.DataPropertyName = "id";
+            this.colID.HeaderText = "id";
+            this.colID.Name = "colID";
+            this.colID.ReadOnly = true;
+            this.colID.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.colID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.colID.Visible = false;
+            this.colID.Width = 5;
+            // 
             // colKeyword
             // 
             this.colKeyword.DataPropertyName = "name";
             this.colKeyword.FillWeight = 225.0424F;
             this.colKeyword.HeaderText = "keyword";
             this.colKeyword.Name = "colKeyword";
+            this.colKeyword.ReadOnly = true;
             // 
             // colGood
             // 
@@ -377,6 +378,23 @@
             this.colVideos.Name = "colVideos";
             this.colVideos.ReadOnly = true;
             // 
+            // btnDeleteCategory
+            // 
+            this.btnDeleteCategory.BackColor = System.Drawing.Color.Transparent;
+            this.btnDeleteCategory.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnDeleteCategory.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.btnDeleteCategory.FlatAppearance.BorderSize = 0;
+            this.btnDeleteCategory.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDeleteCategory.ForeColor = System.Drawing.Color.Transparent;
+            this.btnDeleteCategory.Image = global::KeywordsSoft.Program.Properties.Resources.delete_button_25;
+            this.btnDeleteCategory.Location = new System.Drawing.Point(100, 37);
+            this.btnDeleteCategory.Name = "btnDeleteCategory";
+            this.btnDeleteCategory.Size = new System.Drawing.Size(25, 25);
+            this.btnDeleteCategory.TabIndex = 0;
+            this.btnDeleteCategory.UseVisualStyleBackColor = false;
+            this.btnDeleteCategory.Visible = false;
+            this.btnDeleteCategory.Click += new System.EventHandler(this.btnDeleteCategory_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -407,7 +425,6 @@
 
         private System.Windows.Forms.Button btnDeleteCategory;
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem categoryMenu;
         private System.Windows.Forms.ToolStripMenuItem actionMenu;
         private System.Windows.Forms.ToolStripMenuItem actionMenu_parseItem;
         private System.Windows.Forms.ToolStripMenuItem actionMenu_moveItem;
@@ -428,6 +445,7 @@
         private System.Windows.Forms.ToolStripMenuItem actionMenu_addKeys;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.DataGridViewCheckBoxColumn colKeyCheck;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colID;
         private System.Windows.Forms.DataGridViewTextBoxColumn colKeyword;
         private System.Windows.Forms.DataGridViewTextBoxColumn colGood;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCluster;
@@ -438,6 +456,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colSnippets;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSuggests;
         private System.Windows.Forms.DataGridViewTextBoxColumn colVideos;
+        public System.Windows.Forms.ToolStripMenuItem categoryMenu;
     }
 }
 

@@ -18,7 +18,7 @@ namespace KeywordsSoft.Library.Entities
 
         public int texts { get; set; }
 
-        public int sniptexts { get; set; }
+        public int spintexts { get; set; }
 
         public int images { get; set; }
 

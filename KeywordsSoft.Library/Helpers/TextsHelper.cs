@@ -38,9 +38,38 @@ namespace KeywordsSoft.Library.Helpers
             Database.Delete(Path + dbName + "_texts");
         }
 
+        public List<Texts> Select(string dbName, string filter = null)
+        {
+            return Database.Select<Texts>(Path, dbName + "_texts", filter);
+        }
+
         public bool Add(string dbName, List<string> values)
         {
             return Database.Add<Texts>(Path, dbName + "_texts", values);
+        }
+
+        public bool DeleteParserRelationships(string dbName, List<string> keysIds, Parsers parser)
+        {
+            string ids = string.Empty;
+            keysIds.ForEach(k => ids += $"{k},");
+            ids = ids.Remove(ids.LastIndexOf(','), 1);
+            return Database.Delete<Texts>(Path, dbName + "_texts", $"parser_id = {parser.id} and key_id in ({ids})");
+        }
+
+        public bool DeleteKeysRelationships(string dbName, List<string> keysIds)
+        {
+            string ids = string.Empty;
+            keysIds.ForEach(k => ids += $"{k},");
+            ids = ids.Remove(ids.LastIndexOf(','), 1);
+            return Database.Delete<Texts>(Path, dbName + "_texts", $"key_id in ({ids})");
+        }
+
+        public bool MoveToAnotherDatabase(string dbNameFrom, string dbNameTo, List<string> keysIds)
+        {
+            string ids = string.Empty;
+            keysIds.ForEach(k => ids += $"{k},");
+            ids = ids.Remove(ids.LastIndexOf(','), 1);
+            return Database.MoveToAnotherDatabase<Texts>(Path, dbNameFrom + "_texts", dbNameTo + "_texts", $"key_id in ({ids})");
         }
     }
 }

@@ -51,25 +51,63 @@ namespace KeywordsSoft.Library.Helpers
             new ClustersHelper().DeleteDatabase(dbName);
         }
 
-        public List<MainTable> Select(string dbName)
+        public bool DeleteKeysWithRelationships(string dbName, List<string> keysIds)
+        {
+            return
+                new KeysHelper().Delete(dbName, keysIds) &&
+                new TextsHelper().DeleteKeysRelationships(dbName, keysIds) &&
+                new ImagesHelper().DeleteKeysRelationships(dbName, keysIds) &&
+                new SnippetsHelper().DeleteKeysRelationships(dbName, keysIds) &&
+                new SuggestsHelper().DeleteKeysRelationships(dbName, keysIds) &&
+                new VideosHelper().DeleteKeysRelationships(dbName, keysIds) &&
+                new ClustersHelper().DeleteKeysRelationships(dbName, keysIds);
+        }
+
+        public bool MoveKeysToAnotherDatabase(string dbNameFrom, string dbNameTo, List<string> keysIds)
+        {
+            return
+                new KeysHelper().MoveToAnotherDatabase(dbNameFrom, dbNameTo, keysIds) &&
+                new TextsHelper().MoveToAnotherDatabase(dbNameFrom, dbNameTo, keysIds) &&
+                new ImagesHelper().MoveToAnotherDatabase(dbNameFrom, dbNameTo, keysIds) &&
+                new SnippetsHelper().MoveToAnotherDatabase(dbNameFrom, dbNameTo, keysIds) &&
+                new SuggestsHelper().MoveToAnotherDatabase(dbNameFrom, dbNameTo, keysIds) &&
+                new VideosHelper().MoveToAnotherDatabase(dbNameFrom, dbNameTo, keysIds) &&
+                new ClustersHelper().MoveToAnotherDatabase(dbNameFrom, dbNameTo, keysIds);
+        }
+
+
+        public List<MainTable> Select(string dbName, string parserId = null)
         {
             List<MainTable> MainTableList = new List<MainTable>();
 
+            string filter = null;
+            if (parserId != null)
+            {
+                filter = $"parser_id = {parserId}";
+            }
+
             var KeysList = new KeysHelper().Select(dbName);
-            //new TextsHelper().DeleteDatabase(dbName);
-            var ImagesList = new  ImagesHelper().Select(dbName);
-            //new SnippetsHelper().DeleteDatabase(dbName);
-            //new SuggestsHelper().DeleteDatabase(dbName);
-            //new VideosHelper().DeleteDatabase(dbName);
-            //new ClustersHelper().DeleteDatabase(dbName);
+            var TextsList = new TextsHelper().Select(dbName, filter);
+            var ImagesList = new  ImagesHelper().Select(dbName, filter);
+            var SnippetsList = new SnippetsHelper().Select(dbName, filter);
+            var SuggestsList = new SuggestsHelper().Select(dbName, filter);
+            var VideosList = new VideosHelper().Select(dbName, filter);
+            var ClustersList = new ClustersHelper().Select(dbName);
 
             MainTableList.AddRange(KeysList.Select(k => new MainTable()
             {
+                isChecked = false,
                 id = k.id,
                 name = k.name,
                 good = k.good,
-                isChecked = false,
-                images = ImagesList.Count(i => i.key_id == k.id)
+                cluster = "",
+                urls = TextsList.Count(x => x.key_id == k.id && !string.IsNullOrEmpty(x.url)),
+                texts = TextsList.Count(x => x.key_id == k.id),
+                spintexts = TextsList.Count(x => x.key_id == k.id && !string.IsNullOrEmpty(x.spin)),
+                images = ImagesList.Count(x => x.key_id == k.id),
+                snippets = SnippetsList.Count(x => x.key_id == k.id),
+                suggests = SuggestsList.Count(x => x.key_id == k.id),
+                videos = VideosList.Count(x => x.key_id == k.id)
             }));
 
             return MainTableList;

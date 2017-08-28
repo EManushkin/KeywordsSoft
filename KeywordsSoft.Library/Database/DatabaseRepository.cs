@@ -71,6 +71,8 @@ namespace KeywordsSoft.Library.Database
         {
             if (File.Exists(fullPath + ".db"))
             {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
                 File.Delete(fullPath + ".db");
             }
         }
@@ -85,7 +87,7 @@ namespace KeywordsSoft.Library.Database
             return null;
         }
 
-        public List<T> Select<T>(string path, string dbName) where T : class, new()
+        public List<T> Select<T>(string path, string dbName, string filter = null) where T : class, new()
         {
             List<T> list = new List<T>();
 
@@ -105,7 +107,12 @@ namespace KeywordsSoft.Library.Database
                             sqLiteCommand.CommandType = CommandType.Text;
                             sqLiteCommand.CommandTimeout = 10;
                             sqLiteCommand.Connection = connection;
-                            sqLiteCommand.CommandText = $"SELECT * FROM {typeof(T).Name} LIMIT {limit}";
+
+                            string command = filter == null
+                                ? $"SELECT * FROM {typeof(T).Name} LIMIT {limit}"
+                                : $"SELECT * FROM {typeof(T).Name} WHERE {filter} LIMIT {limit}";
+
+                            sqLiteCommand.CommandText = command;
 
                             SQLiteDataReader reader = sqLiteCommand.ExecuteReader();
                             while (reader.Read())
@@ -190,6 +197,140 @@ namespace KeywordsSoft.Library.Database
                     return false;
                 }
             }
+            return true;
+        }
+
+        public bool Delete<T>(string path, string dbName, string filter = null) where T : class
+        {
+            if (File.Exists(path + dbName + ".db"))
+            {
+                try
+                {
+                    using (var connection = new SQLiteConnection(GetConnectionString(path + dbName)))
+                    {
+                        connection.Open();
+
+                        using (SQLiteCommand sqLiteCommand = new SQLiteCommand())
+                        {
+                            sqLiteCommand.CommandType = CommandType.Text;
+                            sqLiteCommand.CommandTimeout = 10;
+                            sqLiteCommand.Connection = connection;
+
+                            string command = filter == null
+                                ? $"DELETE FROM {typeof(T).Name};"
+                                : $"DELETE FROM {typeof(T).Name} WHERE {filter};";
+
+                            sqLiteCommand.CommandText = command;
+                            sqLiteCommand.ExecuteNonQuery();
+                        }
+
+                        connection.Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public bool MoveToAnotherDatabase<T>(string path, string dbNameFrom, string dbNameTo, string filter) where T : class
+        {
+            DataTable result = null;
+
+            if (File.Exists(path + dbNameFrom + ".db") && File.Exists(path + dbNameTo + ".db"))
+            {
+                try
+                {
+                    result = new DataTable();
+
+                    using (var connectionFrom = new SQLiteConnection(GetConnectionString(path + dbNameFrom)))
+                    {
+                        connectionFrom.Open();
+
+                        using (SQLiteCommand sqLiteCommand = new SQLiteCommand())
+                        {
+                            sqLiteCommand.CommandType = CommandType.Text;
+                            sqLiteCommand.CommandTimeout = 10;
+                            sqLiteCommand.Connection = connectionFrom;
+
+                            string command = $"SELECT * FROM {typeof(T).Name} WHERE {filter} LIMIT {limit}";
+
+                            sqLiteCommand.CommandText = command;
+                            result.Load(sqLiteCommand.ExecuteReader());
+
+                            command = $"DELETE FROM {typeof(T).Name} WHERE {filter};";
+                            sqLiteCommand.CommandText = command;
+                            sqLiteCommand.ExecuteNonQuery();
+                        }
+
+                        connectionFrom.Close();
+                    }
+
+                    using (var connectionTo = new SQLiteConnection(GetConnectionString(path + dbNameTo)))
+                    {
+                        connectionTo.Open();
+
+                        T obj = default(T);
+
+                        using (SQLiteTransaction transaction = connectionTo.BeginTransaction())
+                        {
+                            using (SQLiteCommand sqLiteCommand = new SQLiteCommand())
+                            {
+                                sqLiteCommand.CommandType = CommandType.Text;
+                                sqLiteCommand.CommandTimeout = 10;
+                                sqLiteCommand.Connection = connectionTo;
+
+                                string types = "";
+                                List<PropertyInfo> properties = new List<PropertyInfo>();
+                                obj = Activator.CreateInstance<T>();
+                                foreach (PropertyInfo prop in obj.GetType().GetProperties())
+                                {
+                                    types = string.IsNullOrEmpty(types) ? "" : types + ", ";
+                                    if (prop.Name != "id")
+                                    {
+                                        properties.Add(prop);
+                                        types += prop.Name;
+                                    }
+                                }
+
+                                StringBuilder val = new StringBuilder();
+                                foreach (DataRow row in result.Rows)
+                                {
+                                    val.Append("(");
+                                    var length = row.ItemArray.Count();
+                                    for (int i = 1; i < row.ItemArray.Count(); i++)
+                                    {
+                                        val.Append($"'{row[i]}'" + ", ");
+                                    }
+                                    val.Remove(val.Length - 2, 2).Append("), ");
+
+                                }
+                                val.Remove(val.Length - 2, 2);
+
+                                foreach (DataRow row in result.Rows)
+                                {
+                                    var test = row.ItemArray;
+                                }
+
+                                string command = $"INSERT INTO {typeof(T).Name} ({types}) VALUES {val};";
+                                sqLiteCommand.CommandText = command;
+
+                                sqLiteCommand.ExecuteNonQuery();
+                            }
+
+                            transaction.Commit();
+                        }
+                        connectionTo.Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+
             return true;
         }
     }

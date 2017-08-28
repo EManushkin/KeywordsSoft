@@ -43,9 +43,25 @@ namespace KeywordsSoft.Library.Helpers
             return Database.Add<Keys>(Path, dbName, entity);
         }
 
-        public List<Keys> Select(string dbName)
+        public List<Keys> Select(string dbName, string filter = null)
         {
-            return Database.Select<Keys>(Path, dbName);
+            return Database.Select<Keys>(Path, dbName, filter);
+        }
+
+        public bool Delete(string dbName, List<string> keysIds)
+        {
+            string ids = string.Empty;
+            keysIds.ForEach(k => ids += $"{k},");
+            ids = ids.Remove(ids.LastIndexOf(','), 1);
+            return Database.Delete<Keys>(Path, dbName, $"id in ({ids})");
+        }
+
+        public bool MoveToAnotherDatabase(string dbNameFrom, string dbNameTo, List<string> keysIds)
+        {
+            string ids = string.Empty;
+            keysIds.ForEach(k => ids += $"{k},");
+            ids = ids.Remove(ids.LastIndexOf(','), 1);
+            return Database.MoveToAnotherDatabase<Keys>(Path, dbNameFrom, dbNameTo, $"id in ({ids})");
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using KeywordsSoft.Library.Database;
+using KeywordsSoft.Library.Entities;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -35,6 +36,27 @@ namespace KeywordsSoft.Library.Helpers
         public void DeleteDatabase(string dbName)
         {
             Database.Delete(Path + dbName + "_clusters");
+        }
+
+        public List<Keys_Clusters> Select(string dbName, string filter = null)
+        {
+            return Database.Select<Keys_Clusters>(Path, dbName + "_clusters", filter);
+        }
+
+        public bool DeleteKeysRelationships(string dbName, List<string> keysIds)
+        {
+            string ids = string.Empty;
+            keysIds.ForEach(k => ids += $"{k},");
+            ids = ids.Remove(ids.LastIndexOf(','), 1);
+            return Database.Delete<Keys_Clusters>(Path, dbName + "_clusters", $"key_id in ({ids})");
+        }
+
+        public bool MoveToAnotherDatabase(string dbNameFrom, string dbNameTo, List<string> keysIds)
+        {
+            string ids = string.Empty;
+            keysIds.ForEach(k => ids += $"{k},");
+            ids = ids.Remove(ids.LastIndexOf(','), 1);
+            return Database.MoveToAnotherDatabase<Keys_Clusters>(Path, dbNameFrom + "_clusters", dbNameTo + "_clusters", $"key_id in ({ids})");
         }
     }
 }

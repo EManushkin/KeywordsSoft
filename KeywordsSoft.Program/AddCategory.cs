@@ -73,7 +73,8 @@ namespace KeywordsSoft.Program
 
                 Thread.Sleep(2000);
 
-                Program.mainForm.LoadMenu();
+                Program.mainForm.currentCategory = $"{language}_{ tbCategoryName.Text}";
+
                 this.Close();
             }
         }

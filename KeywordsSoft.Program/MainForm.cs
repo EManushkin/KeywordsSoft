@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Equin.ApplicationFramework;
 
 namespace KeywordsSoft.Program
 {
@@ -23,6 +24,17 @@ namespace KeywordsSoft.Program
 
         private CheckBox ckBox { get; set; }
 
+        public class ComboBoxItem
+        {
+            public string Text { get; set; }
+            public object Value { get; set; }
+
+            public override string ToString()
+            {
+                return Text;
+            }
+        }
+
         public MainForm()
         {
             InitializeComponent();
@@ -31,7 +43,7 @@ namespace KeywordsSoft.Program
 
             LoadMenu();
             LoadMenuParsers();
-            LoadDataGridViewCategoryKeys();
+            PaintDataGridViewCategoryKeys();
         }
 
         public void LoadMenu()
@@ -100,11 +112,12 @@ namespace KeywordsSoft.Program
                 menuItem.DropDownItems.Add(troolStripItem);
             }
 
-            cbParserSelect.Items.AddRange(ParsersList.Select(x => $"{x.name}_{x.type}").OrderBy(x => x).ToArray());
+            cbParserSelect.Items.Add(new ComboBoxItem() { Text = "Все", Value = (long)-1 });
+            cbParserSelect.Items.AddRange(ParsersList.Select(x => new ComboBoxItem() { Text = $"{x.name}_{x.type}", Value = x.id }).OrderBy(x => x.Text).ToArray());
             cbParserSelect.SelectedIndex = 0;
         }
 
-        public void LoadDataGridViewCategoryKeys()
+        public void PaintDataGridViewCategoryKeys()
         {
             this.dataGridViewCategoryKeys.AutoGenerateColumns = false;
 
@@ -115,6 +128,12 @@ namespace KeywordsSoft.Program
             ckBox.Location = new Point() { X = rect.Location.X + 11, Y = rect.Location.Y + 3 };
             ckBox.CheckedChanged += new EventHandler(ckBox_CheckedChanged);
             this.dataGridViewCategoryKeys.Controls.Add(ckBox);
+        }
+
+        public void LoadDataGridViewCategoryKeys(string parserId = null)
+        {
+            MainTableList = new DatabaseHelper().Select(currentCategory, parserId);
+            dataGridViewCategoryKeys.DataSource = new BindingListView<MainTable>(MainTableList);
         }
 
         public void ResetForm()
@@ -146,51 +165,32 @@ namespace KeywordsSoft.Program
         {
             ToolStripItem item = sender as ToolStripItem;
 
+            previousCategory = currentCategory;
+            if (!string.IsNullOrEmpty(previousCategory))
+                this.actionMenu_moveItem.DropDownItems[$"actionMenu_moveItem_{previousCategory}"].Enabled = true;
+
             if (item.Name == "AddCategory")
             {
                 var formAddCategory = new AddCategory();
                 formAddCategory.ShowDialog(this);
+
+                LoadMenu();
             }
             else
             {
-                KeysActionEnabled(true);
-
-                previousCategory = currentCategory;
-                if (!string.IsNullOrEmpty(previousCategory))
-                    this.actionMenu_moveItem.DropDownItems[$"actionMenu_moveItem_{previousCategory}"].Enabled = true;
-
                 currentCategory = item.Text;
-                this.actionMenu_moveItem.DropDownItems[$"actionMenu_moveItem_{currentCategory}"].Enabled = false;
-
-                labelCategorySelected.Text = currentCategory;
-                btnDeleteCategory.Visible = true;
-
-                MainTableList = new DatabaseHelper().Select(currentCategory);
-
-                dataGridViewCategoryKeys.DataSource = MainTableList;
             }
+
+            KeysActionEnabled(true);
+
+            this.actionMenu_moveItem.DropDownItems[$"actionMenu_moveItem_{currentCategory}"].Enabled = false;
+
+            labelCategorySelected.Text = currentCategory;
+            btnDeleteCategory.Visible = true;
+
+            LoadDataGridViewCategoryKeys();
         }
 
-        private void actionMenu_addKeys_Click(object sender, EventArgs e)
-        {
-            var formAddKeys = new AddKeys();
-            formAddKeys.ShowDialog(this);
-        }
-
-        private void actionMenuParserItem_Click(object sender, EventArgs e)
-        {
-            ToolStripItem item = sender as ToolStripItem;
-
-            var parser = ParsersList.FirstOrDefault(p => p.name == item.Text && p.type == item.OwnerItem.Text);
-            var testKeyIdsList = new List<string>() { "1", "2", "3", "4" };
-            new ParsersHelper().Parse(testKeyIdsList, parser, currentCategory);
-        }
-
-        private void actionMenu_moveItem_Click(object sender, EventArgs e)
-        {
-            ToolStripItem item = sender as ToolStripItem;
-            
-        }
 
         private void btnDeleteCategory_Click(object sender, EventArgs e)
         {
@@ -203,6 +203,81 @@ namespace KeywordsSoft.Program
             }
         }
 
+        private void actionMenu_addKeys_Click(object sender, EventArgs e)
+        {
+            var formAddKeys = new AddKeys();
+            formAddKeys.ShowDialog(this);
+        }
+
+        private void actionMenu_deleteItem_Click(object sender, EventArgs e)
+        {
+            var ids = GetCheckedKeysIds();
+
+            if (new DatabaseHelper().DeleteKeysWithRelationships(currentCategory, ids))
+            {
+                LoadDataGridViewCategoryKeys();
+            }
+        }
+
+        private void actionMenu_moveItem_Click(object sender, EventArgs e)
+        {
+            ToolStripItem item = sender as ToolStripItem;
+
+            var moveTo = item.Text;
+            var ids = GetCheckedKeysIds();
+
+            if (new DatabaseHelper().MoveKeysToAnotherDatabase(currentCategory, moveTo, ids))
+            {
+                LoadDataGridViewCategoryKeys();
+            }
+        }
+
+        private void actionMenuParserItem_Click(object sender, EventArgs e)
+        {
+            ToolStripItem item = sender as ToolStripItem;
+
+            if (item != null && item.Text != "All...")
+            {
+                var parser = ParsersList.FirstOrDefault(p => p.name == item.Text && p.type == item.OwnerItem.Text);
+                var ids = GetCheckedKeysIds();
+
+                if (new ParsersHelper().Parse(currentCategory, ids, parser))
+                {
+                    var confirmResult = MessageBox.Show($"Информация по выбранным ключам по типу {parser.type} спарсена парсером {parser.name}.", "Парсинг завершен", MessageBoxButtons.OK);
+                    if (confirmResult == DialogResult.OK)
+                    {
+                        LoadDataGridViewCategoryKeys();
+                    }
+                }
+            }
+        }
+
+        private void cbParserSelect_SelectedValueChanged(object sender, EventArgs e)
+        {
+            ComboBoxItem item = (ComboBoxItem)cbParserSelect.SelectedItem;
+            if (item != null && currentCategory != null)
+            {
+                if ((long)item.Value == -1)
+                {
+                    LoadDataGridViewCategoryKeys();
+                }
+                else
+                {
+                    LoadDataGridViewCategoryKeys(item.Value.ToString());
+                }
+            }
+        }
+
+        private List<string> GetCheckedKeysIds()
+        {
+            dataGridViewCategoryKeys.EndEdit();
+
+            return dataGridViewCategoryKeys.Rows
+                .Cast<DataGridViewRow>()
+                .Where(r => (bool?)r.Cells[0].Value == true)
+                .Select(x => x.Cells[1].Value.ToString())
+                .ToList();
+        }
         
     }
 }

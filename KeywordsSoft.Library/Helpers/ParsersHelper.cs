@@ -42,41 +42,89 @@ namespace KeywordsSoft.Library.Helpers
             Database.Delete(Path + "parsers");
         }
 
-        //public bool Add(string dbName, List<string> entity)
-        //{
-        //    return Database.Add<Keys>(Path, dbName, entity);
-        //}
 
         public List<Parsers> Select()
         {
             return Database.Select<Parsers>(Path, "parsers");
         }
 
-        public bool Parse(List<string> keysIds, Parsers parser, string dbName)
+        public bool Parse(string dbName, List<string> keysIds, Parsers parser)
         {
             Random rnd = new Random((int)DateTime.Now.Ticks);
             List<string> values = new List<string>();
             switch (parser.type)
             {
                 case Parsers.type_texts:
+                    var textsHelper = new TextsHelper();
+                    textsHelper.DeleteParserRelationships(dbName, keysIds, parser);
                     //TODO parse algorithm
-                    foreach (var id in keysIds)
+                    foreach (var keyId in keysIds)
                     {
                         for (int i = 0; i < rnd.Next(10, 30); i++)
                         {
                             //(key_id, text, spin, parser_id, url)
-                            values.Add($"('{id}', 'parse_text_{i}', 'parse_spin_{i}', '{parser.id}', 'parse_url_www{i}')");
+                            if (rnd.Next(0, 2) == 0)
+                            {
+                                values.Add($"('{keyId}', 'parse_text_{DateTime.Now.Ticks + i}', '', '{parser.id}', '')");
+                            }
+                            else
+                            {
+                                values.Add($"('{keyId}', 'parse_text_{DateTime.Now.Ticks + i}', 'parse_spin_{DateTime.Now.Ticks + i}', '{parser.id}', 'parse_url_www_{DateTime.Now.Ticks + i}')");
+                            }
                         }
                     }
-                    return new TextsHelper().Add(dbName, values);
+                    return textsHelper.Add(dbName, values);
+                case Parsers.type_images:
+                    var imagesHelper = new ImagesHelper();
+                    imagesHelper.DeleteParserRelationships(dbName, keysIds, parser);
+                    //TODO parse algorithm
+                    foreach (var keyId in keysIds)
+                    {
+                        for (int i = 0; i < rnd.Next(10, 30); i++)
+                        {
+                            values.Add($"('{keyId}', 'parse_text_{DateTime.Now.Ticks + i}', '{parser.id}')");
+                        }
+                    }
+                    return imagesHelper.Add(dbName, values);
+                case Parsers.type_videos:
+                    var videosHelper = new VideosHelper();
+                    videosHelper.DeleteParserRelationships(dbName, keysIds, parser);
+                    //TODO parse algorithm
+                    foreach (var keyId in keysIds)
+                    {
+                        for (int i = 0; i < rnd.Next(10, 30); i++)
+                        {
+                            values.Add($"('{keyId}', 'parse_text_{DateTime.Now.Ticks + i}', '{parser.id}')");
+                        }
+                    }
+                    return videosHelper.Add(dbName, values);
+                case Parsers.type_snippets:
+                    var snippetsHelper = new SnippetsHelper();
+                    snippetsHelper.DeleteParserRelationships(dbName, keysIds, parser);
+                    //TODO parse algorithm
+                    foreach (var keyId in keysIds)
+                    {
+                        for (int i = 0; i < rnd.Next(10, 30); i++)
+                        {
+                            values.Add($"('{keyId}', 'parse_text_{DateTime.Now.Ticks + i}', '{parser.id}')");
+                        }
+                    }
+                    return snippetsHelper.Add(dbName, values);
+                case Parsers.type_suggests:
+                    var suggestsHelper = new SuggestsHelper();
+                    suggestsHelper.DeleteParserRelationships(dbName, keysIds, parser);
+                    //TODO parse algorithm
+                    foreach (var keyId in keysIds)
+                    {
+                        for (int i = 0; i < rnd.Next(10, 30); i++)
+                        {
+                            values.Add($"('{keyId}', 'parse_text_{DateTime.Now.Ticks + i}', '{parser.id}')");
+                        }
+                    }
+                    return suggestsHelper.Add(dbName, values);
                 default:
                     return false;
             }
         }
-
-        //public List<Parsers> ParseTexts()
-        //{
-        //    return Database.Select<Parsers>(Path, "parsers");
-        //}
     }
 }

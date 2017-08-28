@@ -13,7 +13,7 @@ namespace KeywordsSoft.Library.Helpers
     {
         private string Path = $@"{ConfigurationManager.AppSettings["DatabasePath"]}\videos\";
 
-        private string CreateCommand = @"CREATE TABLE snippets(
+        private string CreateCommand = @"CREATE TABLE Videos(
                                             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
                                             key_id INTEGER,
                                             text TEXT,
@@ -36,9 +36,38 @@ namespace KeywordsSoft.Library.Helpers
             Database.Delete(Path + dbName + "_videos");
         }
 
+        public List<Videos> Select(string dbName, string filter = null)
+        {
+            return Database.Select<Videos>(Path, dbName + "_videos", filter);
+        }
+
         public bool Add(string dbName, List<string> values)
         {
             return Database.Add<Videos>(Path, dbName + "_videos", values);
+        }
+
+        public bool DeleteParserRelationships(string dbName, List<string> keysIds, Parsers parser)
+        {
+            string ids = string.Empty;
+            keysIds.ForEach(k => ids += $"{k},");
+            ids = ids.Remove(ids.LastIndexOf(','), 1);
+            return Database.Delete<Videos>(Path, dbName + "_videos", $"parser_id = {parser.id} and key_id in ({ids})");
+        }
+
+        public bool DeleteKeysRelationships(string dbName, List<string> keysIds)
+        {
+            string ids = string.Empty;
+            keysIds.ForEach(k => ids += $"{k},");
+            ids = ids.Remove(ids.LastIndexOf(','), 1);
+            return Database.Delete<Videos>(Path, dbName + "_videos", $"key_id in ({ids})");
+        }
+
+        public bool MoveToAnotherDatabase(string dbNameFrom, string dbNameTo, List<string> keysIds)
+        {
+            string ids = string.Empty;
+            keysIds.ForEach(k => ids += $"{k},");
+            ids = ids.Remove(ids.LastIndexOf(','), 1);
+            return Database.MoveToAnotherDatabase<Videos>(Path, dbNameFrom + "_videos", dbNameTo + "_videos", $"key_id in ({ids})");
         }
     }
 }
