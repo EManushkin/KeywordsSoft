@@ -1,6 +1,7 @@
 ﻿using KeywordsSoft.Library.Database;
 using KeywordsSoft.Library.Helpers;
 using KeywordsSoft.Library.Entities;
+using KeywordsSoft.Library.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Equin.ApplicationFramework;
+using System.Linq.Expressions;
 
 namespace KeywordsSoft.Program
 {
@@ -21,6 +23,8 @@ namespace KeywordsSoft.Program
 
         public List<MainTable> MainTableList { get; set; }
         public List<Parsers> ParsersList { get; set; }
+
+        public BindingListView<MainTable> dgView { get; set; }
 
         private CheckBox ckBox { get; set; }
 
@@ -44,6 +48,7 @@ namespace KeywordsSoft.Program
             LoadMenu();
             LoadMenuParsers();
             PaintDataGridViewCategoryKeys();
+            LoadFilterItems();
         }
 
         public void LoadMenu()
@@ -117,6 +122,31 @@ namespace KeywordsSoft.Program
             cbParserSelect.SelectedIndex = 0;
         }
 
+        public void LoadFilterItems()
+        {
+            tbFilterValue.Multiline = true;
+            Size size = new Size(120, 24);
+            tbFilterValue.MinimumSize = size;
+            tbFilterValue.Size = size;
+            tbFilterValue.Multiline = false;
+
+            cbFilterField.Items.AddRange(new[] {
+                new ComboBoxItem { Text = "Поле", Value = string.Empty },
+                new ComboBoxItem { Text = "keyword", Value = "string" },
+                new ComboBoxItem { Text = "cluster", Value = "string" },
+                new ComboBoxItem { Text = "urls", Value = "int" },
+                new ComboBoxItem { Text = "texts", Value = "int" },
+                new ComboBoxItem { Text = "spintexts", Value = "int" },
+                new ComboBoxItem { Text = "images", Value = "int" },
+                new ComboBoxItem { Text = "snippets", Value = "int" },
+                new ComboBoxItem { Text = "suggests", Value = "int" },
+                new ComboBoxItem { Text = "videos", Value = "int" },
+            });
+
+            cbFilterField.SelectedIndex = 0;
+            cbFilterOperator.SelectedIndex = 0;
+        }
+
         public void PaintDataGridViewCategoryKeys()
         {
             this.dataGridViewCategoryKeys.AutoGenerateColumns = false;
@@ -133,7 +163,8 @@ namespace KeywordsSoft.Program
         public void LoadDataGridViewCategoryKeys(string parserId = null)
         {
             MainTableList = new DatabaseHelper().Select(currentCategory, parserId);
-            dataGridViewCategoryKeys.DataSource = new BindingListView<MainTable>(MainTableList);
+            dgView = new BindingListView<MainTable>(MainTableList);
+            dataGridViewCategoryKeys.DataSource = dgView;
         }
 
         public void ResetForm()
@@ -141,15 +172,30 @@ namespace KeywordsSoft.Program
             labelCategorySelected.Text = null;
             currentCategory = null;
             btnDeleteCategory.Visible = false;
-            cbParserSelect.SelectedIndex = 0;
+
+            CategoryChangeReset(false);
+
             LoadMenu();
+            LoadDataGridViewCategoryKeys();
         }
 
-        public void KeysActionEnabled(bool state)
+        public void CategoryChangeReset(bool state)
         {
             actionMenu_moveItem.Enabled = state;
             actionMenu_parseItem.Enabled = state;
             actionMenu_deleteItem.Enabled = state;
+            cbParserSelect.Enabled = state;
+
+            cbFilterField.Enabled = state;
+
+            cbFilterField.SelectedIndex = 0;
+            cbFilterOperator.SelectedIndex = 0;
+            cbParserSelect.SelectedIndex = 0;
+            tbFilterValue.Text = string.Empty;
+
+            cbFilterOperator.Enabled = false;
+            tbFilterValue.Enabled = false;
+            btnFilter.Enabled = false;
         }
 
         private void ckBox_CheckedChanged(object sender, EventArgs e)
@@ -181,7 +227,7 @@ namespace KeywordsSoft.Program
                 currentCategory = item.Text;
             }
 
-            KeysActionEnabled(true);
+            CategoryChangeReset(true);
 
             this.actionMenu_moveItem.DropDownItems[$"actionMenu_moveItem_{currentCategory}"].Enabled = false;
 
@@ -268,6 +314,26 @@ namespace KeywordsSoft.Program
             }
         }
 
+        private void cbFilterField_SelectedValueChanged(object sender, EventArgs e)
+        {
+            ComboBoxItem item = (ComboBoxItem)cbFilterField.SelectedItem;
+            if (item != null && !string.IsNullOrEmpty((string)item.Value))
+            {
+                if ((string)item.Value == "int")
+                {
+                    cbFilterOperator.Enabled = true;
+                }
+                else
+                {
+                    cbFilterOperator.SelectedIndex = 0;
+                    cbFilterOperator.Enabled = false;
+                }
+
+                tbFilterValue.Enabled = true;
+                btnFilter.Enabled = true;
+            }
+        }
+
         private List<string> GetCheckedKeysIds()
         {
             dataGridViewCategoryKeys.EndEdit();
@@ -278,6 +344,42 @@ namespace KeywordsSoft.Program
                 .Select(x => x.Cells[1].Value.ToString())
                 .ToList();
         }
-        
+
+        private void btnFilter_Click(object sender, EventArgs e)
+        {
+            ComboBoxItem fieldItem = (ComboBoxItem)cbFilterField.SelectedItem;
+            switch (fieldItem.Text)
+            {
+                case "keyword":
+                    dgView.ApplyFilter(x => x.name.ToLower().Contains(tbFilterValue.Text.ToLower()));
+                    break;
+                case "cluster":
+                    dgView.ApplyFilter(x => x.cluster.ToLower().Contains(tbFilterValue.Text.ToLower()));
+                    break;
+                case "urls":
+                case "texts":
+                case "spintexts":
+                case "images":
+                case "snippets":
+                case "suggests":
+                case "videos":
+                    Expression<Func<MainTable, bool>> func = Extentions.strToFunc<MainTable>(fieldItem.Text, cbFilterOperator.Text, tbFilterValue.Text);
+                    Predicate<MainTable> pred = func.ExpressionToFunc().Invoke;
+                    dgView.ApplyFilter(pred);
+                    break;
+                default:
+                    dgView.RemoveFilter();
+                    break;
+            }
+            
+
+            //Refresh();
+            //dgView.ApplyFilter(delegate (MainTable maintable) { return maintable.urls > 10; });
+            //dataGridViewCategoryKeys.DataSource = dgView;
+            //dataGridViewCategoryKeys.RefreshEdit();
+
+        }
+
+
     }
 }

@@ -33,19 +33,8 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.categoryMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.actionMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.actionMenu_addKeys = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.actionMenu_parseItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.actionMenu_parseItem_texts = new System.Windows.Forms.ToolStripMenuItem();
-            this.actionMenu_parseItem_images = new System.Windows.Forms.ToolStripMenuItem();
-            this.actionMenu_parseItem_videos = new System.Windows.Forms.ToolStripMenuItem();
-            this.actionMenu_parseItem_suggests = new System.Windows.Forms.ToolStripMenuItem();
-            this.actionMenu_parseItem_snippets = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.actionMenu_parseItem_all = new System.Windows.Forms.ToolStripMenuItem();
-            this.actionMenu_moveItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.actionMenu_deleteItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelCategory = new System.Windows.Forms.Label();
             this.labelCategorySelected = new System.Windows.Forms.Label();
             this.labelParser = new System.Windows.Forms.Label();
@@ -63,7 +52,22 @@
             this.colSnippets = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colSuggests = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colVideos = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cbFilterField = new System.Windows.Forms.ComboBox();
+            this.cbFilterOperator = new System.Windows.Forms.ComboBox();
+            this.tbFilterValue = new System.Windows.Forms.TextBox();
+            this.btnFilter = new System.Windows.Forms.Button();
             this.btnDeleteCategory = new System.Windows.Forms.Button();
+            this.actionMenu_addKeys = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionMenu_parseItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionMenu_parseItem_texts = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionMenu_parseItem_images = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionMenu_parseItem_videos = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionMenu_parseItem_suggests = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionMenu_parseItem_snippets = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.actionMenu_parseItem_all = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionMenu_moveItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionMenu_deleteItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCategoryKeys)).BeginInit();
             this.SuspendLayout();
@@ -102,97 +106,15 @@
             this.actionMenu.Size = new System.Drawing.Size(87, 24);
             this.actionMenu.Text = "Действие";
             // 
-            // actionMenu_addKeys
-            // 
-            this.actionMenu_addKeys.Image = global::KeywordsSoft.Program.Properties.Resources.add_key_icon;
-            this.actionMenu_addKeys.Name = "actionMenu_addKeys";
-            this.actionMenu_addKeys.Size = new System.Drawing.Size(238, 24);
-            this.actionMenu_addKeys.Text = "Добавить ключи";
-            this.actionMenu_addKeys.Click += new System.EventHandler(this.actionMenu_addKeys_Click);
-            // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(235, 6);
             // 
-            // actionMenu_parseItem
-            // 
-            this.actionMenu_parseItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.actionMenu_parseItem_texts,
-            this.actionMenu_parseItem_images,
-            this.actionMenu_parseItem_videos,
-            this.actionMenu_parseItem_suggests,
-            this.actionMenu_parseItem_snippets,
-            this.toolStripSeparator2,
-            this.actionMenu_parseItem_all});
-            this.actionMenu_parseItem.Enabled = false;
-            this.actionMenu_parseItem.Image = global::KeywordsSoft.Program.Properties.Resources.parse_icon;
-            this.actionMenu_parseItem.Name = "actionMenu_parseItem";
-            this.actionMenu_parseItem.Size = new System.Drawing.Size(238, 24);
-            this.actionMenu_parseItem.Text = "Спарсить информацию";
-            // 
-            // actionMenu_parseItem_texts
-            // 
-            this.actionMenu_parseItem_texts.Name = "actionMenu_parseItem_texts";
-            this.actionMenu_parseItem_texts.Size = new System.Drawing.Size(134, 24);
-            this.actionMenu_parseItem_texts.Text = "texts";
-            // 
-            // actionMenu_parseItem_images
-            // 
-            this.actionMenu_parseItem_images.Name = "actionMenu_parseItem_images";
-            this.actionMenu_parseItem_images.Size = new System.Drawing.Size(134, 24);
-            this.actionMenu_parseItem_images.Text = "images";
-            // 
-            // actionMenu_parseItem_videos
-            // 
-            this.actionMenu_parseItem_videos.Name = "actionMenu_parseItem_videos";
-            this.actionMenu_parseItem_videos.Size = new System.Drawing.Size(134, 24);
-            this.actionMenu_parseItem_videos.Text = "videos";
-            // 
-            // actionMenu_parseItem_suggests
-            // 
-            this.actionMenu_parseItem_suggests.Name = "actionMenu_parseItem_suggests";
-            this.actionMenu_parseItem_suggests.Size = new System.Drawing.Size(134, 24);
-            this.actionMenu_parseItem_suggests.Text = "suggests";
-            // 
-            // actionMenu_parseItem_snippets
-            // 
-            this.actionMenu_parseItem_snippets.Name = "actionMenu_parseItem_snippets";
-            this.actionMenu_parseItem_snippets.Size = new System.Drawing.Size(134, 24);
-            this.actionMenu_parseItem_snippets.Text = "snippets";
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(131, 6);
-            // 
-            // actionMenu_parseItem_all
-            // 
-            this.actionMenu_parseItem_all.Name = "actionMenu_parseItem_all";
-            this.actionMenu_parseItem_all.Size = new System.Drawing.Size(134, 24);
-            this.actionMenu_parseItem_all.Text = "All...";
-            // 
-            // actionMenu_moveItem
-            // 
-            this.actionMenu_moveItem.Enabled = false;
-            this.actionMenu_moveItem.Image = global::KeywordsSoft.Program.Properties.Resources.move_icon;
-            this.actionMenu_moveItem.Name = "actionMenu_moveItem";
-            this.actionMenu_moveItem.Size = new System.Drawing.Size(238, 24);
-            this.actionMenu_moveItem.Text = "Перенести";
-            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(235, 6);
-            // 
-            // actionMenu_deleteItem
-            // 
-            this.actionMenu_deleteItem.Enabled = false;
-            this.actionMenu_deleteItem.Image = global::KeywordsSoft.Program.Properties.Resources.delete_icon;
-            this.actionMenu_deleteItem.Name = "actionMenu_deleteItem";
-            this.actionMenu_deleteItem.Size = new System.Drawing.Size(238, 24);
-            this.actionMenu_deleteItem.Text = "Удалить ключи";
-            this.actionMenu_deleteItem.Click += new System.EventHandler(this.actionMenu_deleteItem_Click);
             // 
             // labelCategory
             // 
@@ -227,12 +149,13 @@
             // 
             this.cbParserSelect.Cursor = System.Windows.Forms.Cursors.Hand;
             this.cbParserSelect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbParserSelect.Enabled = false;
             this.cbParserSelect.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.cbParserSelect.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.cbParserSelect.FormattingEnabled = true;
             this.cbParserSelect.Location = new System.Drawing.Point(100, 68);
             this.cbParserSelect.Name = "cbParserSelect";
-            this.cbParserSelect.Size = new System.Drawing.Size(177, 24);
+            this.cbParserSelect.Size = new System.Drawing.Size(200, 24);
             this.cbParserSelect.TabIndex = 5;
             this.cbParserSelect.SelectedValueChanged += new System.EventHandler(this.cbParserSelect_SelectedValueChanged);
             // 
@@ -378,6 +301,70 @@
             this.colVideos.Name = "colVideos";
             this.colVideos.ReadOnly = true;
             // 
+            // cbFilterField
+            // 
+            this.cbFilterField.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbFilterField.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.cbFilterField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbFilterField.Enabled = false;
+            this.cbFilterField.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.cbFilterField.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.cbFilterField.FormattingEnabled = true;
+            this.cbFilterField.Location = new System.Drawing.Point(502, 68);
+            this.cbFilterField.Name = "cbFilterField";
+            this.cbFilterField.Size = new System.Drawing.Size(150, 24);
+            this.cbFilterField.TabIndex = 7;
+            this.cbFilterField.SelectedValueChanged += new System.EventHandler(this.cbFilterField_SelectedValueChanged);
+            // 
+            // cbFilterOperator
+            // 
+            this.cbFilterOperator.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbFilterOperator.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.cbFilterOperator.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbFilterOperator.Enabled = false;
+            this.cbFilterOperator.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.cbFilterOperator.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.cbFilterOperator.FormattingEnabled = true;
+            this.cbFilterOperator.Items.AddRange(new object[] {
+            "=",
+            ">",
+            "<",
+            ">=",
+            "<="});
+            this.cbFilterOperator.Location = new System.Drawing.Point(658, 68);
+            this.cbFilterOperator.Name = "cbFilterOperator";
+            this.cbFilterOperator.Size = new System.Drawing.Size(100, 24);
+            this.cbFilterOperator.TabIndex = 8;
+            // 
+            // tbFilterValue
+            // 
+            this.tbFilterValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbFilterValue.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.tbFilterValue.Enabled = false;
+            this.tbFilterValue.Location = new System.Drawing.Point(764, 68);
+            this.tbFilterValue.Name = "tbFilterValue";
+            this.tbFilterValue.Size = new System.Drawing.Size(120, 13);
+            this.tbFilterValue.TabIndex = 9;
+            this.tbFilterValue.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // btnFilter
+            // 
+            this.btnFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnFilter.BackColor = System.Drawing.Color.Transparent;
+            this.btnFilter.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnFilter.Enabled = false;
+            this.btnFilter.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.btnFilter.FlatAppearance.BorderSize = 0;
+            this.btnFilter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFilter.ForeColor = System.Drawing.Color.Transparent;
+            this.btnFilter.Image = global::KeywordsSoft.Program.Properties.Resources.filter_icon_25;
+            this.btnFilter.Location = new System.Drawing.Point(890, 68);
+            this.btnFilter.Name = "btnFilter";
+            this.btnFilter.Size = new System.Drawing.Size(25, 25);
+            this.btnFilter.TabIndex = 10;
+            this.btnFilter.UseVisualStyleBackColor = false;
+            this.btnFilter.Click += new System.EventHandler(this.btnFilter_Click);
+            // 
             // btnDeleteCategory
             // 
             this.btnDeleteCategory.BackColor = System.Drawing.Color.Transparent;
@@ -395,12 +382,98 @@
             this.btnDeleteCategory.Visible = false;
             this.btnDeleteCategory.Click += new System.EventHandler(this.btnDeleteCategory_Click);
             // 
+            // actionMenu_addKeys
+            // 
+            this.actionMenu_addKeys.Image = global::KeywordsSoft.Program.Properties.Resources.add_key_icon;
+            this.actionMenu_addKeys.Name = "actionMenu_addKeys";
+            this.actionMenu_addKeys.Size = new System.Drawing.Size(238, 24);
+            this.actionMenu_addKeys.Text = "Добавить ключи";
+            this.actionMenu_addKeys.Click += new System.EventHandler(this.actionMenu_addKeys_Click);
+            // 
+            // actionMenu_parseItem
+            // 
+            this.actionMenu_parseItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.actionMenu_parseItem_texts,
+            this.actionMenu_parseItem_images,
+            this.actionMenu_parseItem_videos,
+            this.actionMenu_parseItem_suggests,
+            this.actionMenu_parseItem_snippets,
+            this.toolStripSeparator2,
+            this.actionMenu_parseItem_all});
+            this.actionMenu_parseItem.Enabled = false;
+            this.actionMenu_parseItem.Image = global::KeywordsSoft.Program.Properties.Resources.parse_icon;
+            this.actionMenu_parseItem.Name = "actionMenu_parseItem";
+            this.actionMenu_parseItem.Size = new System.Drawing.Size(238, 24);
+            this.actionMenu_parseItem.Text = "Спарсить информацию";
+            // 
+            // actionMenu_parseItem_texts
+            // 
+            this.actionMenu_parseItem_texts.Name = "actionMenu_parseItem_texts";
+            this.actionMenu_parseItem_texts.Size = new System.Drawing.Size(134, 24);
+            this.actionMenu_parseItem_texts.Text = "texts";
+            // 
+            // actionMenu_parseItem_images
+            // 
+            this.actionMenu_parseItem_images.Name = "actionMenu_parseItem_images";
+            this.actionMenu_parseItem_images.Size = new System.Drawing.Size(134, 24);
+            this.actionMenu_parseItem_images.Text = "images";
+            // 
+            // actionMenu_parseItem_videos
+            // 
+            this.actionMenu_parseItem_videos.Name = "actionMenu_parseItem_videos";
+            this.actionMenu_parseItem_videos.Size = new System.Drawing.Size(134, 24);
+            this.actionMenu_parseItem_videos.Text = "videos";
+            // 
+            // actionMenu_parseItem_suggests
+            // 
+            this.actionMenu_parseItem_suggests.Name = "actionMenu_parseItem_suggests";
+            this.actionMenu_parseItem_suggests.Size = new System.Drawing.Size(134, 24);
+            this.actionMenu_parseItem_suggests.Text = "suggests";
+            // 
+            // actionMenu_parseItem_snippets
+            // 
+            this.actionMenu_parseItem_snippets.Name = "actionMenu_parseItem_snippets";
+            this.actionMenu_parseItem_snippets.Size = new System.Drawing.Size(134, 24);
+            this.actionMenu_parseItem_snippets.Text = "snippets";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(131, 6);
+            // 
+            // actionMenu_parseItem_all
+            // 
+            this.actionMenu_parseItem_all.Name = "actionMenu_parseItem_all";
+            this.actionMenu_parseItem_all.Size = new System.Drawing.Size(134, 24);
+            this.actionMenu_parseItem_all.Text = "All...";
+            // 
+            // actionMenu_moveItem
+            // 
+            this.actionMenu_moveItem.Enabled = false;
+            this.actionMenu_moveItem.Image = global::KeywordsSoft.Program.Properties.Resources.move_icon;
+            this.actionMenu_moveItem.Name = "actionMenu_moveItem";
+            this.actionMenu_moveItem.Size = new System.Drawing.Size(238, 24);
+            this.actionMenu_moveItem.Text = "Перенести";
+            // 
+            // actionMenu_deleteItem
+            // 
+            this.actionMenu_deleteItem.Enabled = false;
+            this.actionMenu_deleteItem.Image = global::KeywordsSoft.Program.Properties.Resources.delete_icon;
+            this.actionMenu_deleteItem.Name = "actionMenu_deleteItem";
+            this.actionMenu_deleteItem.Size = new System.Drawing.Size(238, 24);
+            this.actionMenu_deleteItem.Text = "Удалить ключи";
+            this.actionMenu_deleteItem.Click += new System.EventHandler(this.actionMenu_deleteItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(938, 578);
+            this.Controls.Add(this.btnFilter);
+            this.Controls.Add(this.tbFilterValue);
+            this.Controls.Add(this.cbFilterOperator);
+            this.Controls.Add(this.cbFilterField);
             this.Controls.Add(this.dataGridViewCategoryKeys);
             this.Controls.Add(this.cbParserSelect);
             this.Controls.Add(this.labelParser);
@@ -457,6 +530,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colSuggests;
         private System.Windows.Forms.DataGridViewTextBoxColumn colVideos;
         public System.Windows.Forms.ToolStripMenuItem categoryMenu;
+        private System.Windows.Forms.ComboBox cbFilterField;
+        private System.Windows.Forms.ComboBox cbFilterOperator;
+        private System.Windows.Forms.TextBox tbFilterValue;
+        private System.Windows.Forms.Button btnFilter;
     }
 }
 
