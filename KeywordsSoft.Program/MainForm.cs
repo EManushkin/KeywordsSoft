@@ -371,15 +371,20 @@ namespace KeywordsSoft.Program
                     dgView.RemoveFilter();
                     break;
             }
-            
-
-            //Refresh();
-            //dgView.ApplyFilter(delegate (MainTable maintable) { return maintable.urls > 10; });
-            //dataGridViewCategoryKeys.DataSource = dgView;
-            //dataGridViewCategoryKeys.RefreshEdit();
-
         }
 
-
+        private void dataGridViewCategoryKeys_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dataGridViewCategoryKeys.CurrentCell.ColumnIndex.Equals(2) && e.RowIndex != -1)
+            {
+                if (dataGridViewCategoryKeys.CurrentCell != null && dataGridViewCategoryKeys.CurrentCell.Value != null)
+                {
+                    var keyId = dataGridViewCategoryKeys.CurrentRow.Cells[1].Value.ToString();
+                    var keyName = dataGridViewCategoryKeys.CurrentCell.Value.ToString();
+                    var formAboutKey = new AboutKey(keyId, keyName);
+                    formAboutKey.ShowDialog(this);
+                }
+            }
+        }
     }
 }

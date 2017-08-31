@@ -72,7 +72,7 @@ namespace KeywordsSoft.Library.Helpers
                 new SnippetsHelper().MoveToAnotherDatabase(dbNameFrom, dbNameTo, keysIds) &&
                 new SuggestsHelper().MoveToAnotherDatabase(dbNameFrom, dbNameTo, keysIds) &&
                 new VideosHelper().MoveToAnotherDatabase(dbNameFrom, dbNameTo, keysIds) &&
-                new ClustersHelper().MoveToAnotherDatabase(dbNameFrom, dbNameTo, keysIds);
+                new ClustersHelper().DeleteKeysRelationships(dbNameFrom, keysIds);
         }
 
 
@@ -100,7 +100,7 @@ namespace KeywordsSoft.Library.Helpers
                 id = k.id,
                 name = k.name,
                 good = k.good,
-                cluster = "",
+                cluster = ClustersList.Where(x => x.key_id == k.id).Select(c => c.cluster_id.ToString()).OrderBy(c => c).Aggregate((current, next) => current + ", " + next),
                 urls = TextsList.Count(x => x.key_id == k.id && !string.IsNullOrEmpty(x.url)),
                 texts = TextsList.Count(x => x.key_id == k.id),
                 spintexts = TextsList.Count(x => x.key_id == k.id && !string.IsNullOrEmpty(x.spin)),

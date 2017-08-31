@@ -43,9 +43,14 @@ namespace KeywordsSoft.Library.Helpers
         }
 
 
-        public List<Parsers> Select()
+        public List<Parsers> Select(string type = null)
         {
-            return Database.Select<Parsers>(Path, "parsers");
+            string filter = null;
+            if (type != null)
+            {
+                filter = $"type = {type}";
+            }
+            return Database.Select<Parsers>(Path, "parsers", filter);
         }
 
         public bool Parse(string dbName, List<string> keysIds, Parsers parser)

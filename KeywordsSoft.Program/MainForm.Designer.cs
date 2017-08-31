@@ -197,6 +197,7 @@
             this.dataGridViewCategoryKeys.RowHeadersVisible = false;
             this.dataGridViewCategoryKeys.Size = new System.Drawing.Size(900, 422);
             this.dataGridViewCategoryKeys.TabIndex = 6;
+            this.dataGridViewCategoryKeys.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewCategoryKeys_CellClick);
             // 
             // colKeyCheck
             // 
