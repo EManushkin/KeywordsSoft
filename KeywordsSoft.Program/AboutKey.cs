@@ -14,7 +14,7 @@ namespace KeywordsSoft.Program
 {
     public partial class AboutKey : Form
     {
-        public AboutKey(string keyId, string keyName)
+        public AboutKey(string dbName, string keyId, string keyName)
         {
             InitializeComponent();
 
@@ -34,8 +34,38 @@ namespace KeywordsSoft.Program
                 dgvTexts.Columns[i].Name = TextsParser[i].name;
             }
 
-            //dgvTexts.DataSource = new List<object>() { new { parser = "paresr test" } };
+            var texts = new TextsHelper().Select(dbName, $"key_id = {keyId} and parser_id in ({string.Join(", ", TextsParser.Select(x => x.id))})");
 
+            var max = 0;
+            var c = 0;
+            foreach (var p in TextsParser)
+            {
+
+
+                c = texts.Count(x => x.parser_id == p.id);
+                max = c > max ? c : max;
+
+            }
+
+            for (int i = 0; i < max; i++)
+            {
+                List<string> row = new List<string>();
+                for (int j = 0; j < TextsParser.Count; j++)
+                {
+                    var itemArray = texts.Where(x => x.parser_id == TextsParser[j].id).ToArray();
+                    if (itemArray != null && itemArray.Length > i)
+                    {
+                        row.Add(itemArray[i].text);
+                    }
+                    else
+                    {
+                        row.Add(null);
+                    }
+
+                }
+                dgvTexts.Rows.Add(row.ToArray());
+
+            }
         }
 
         private void btnBack_Click(object sender, EventArgs e)

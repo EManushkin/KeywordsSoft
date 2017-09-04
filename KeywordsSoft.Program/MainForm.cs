@@ -381,7 +381,7 @@ namespace KeywordsSoft.Program
                 {
                     var keyId = dataGridViewCategoryKeys.CurrentRow.Cells[1].Value.ToString();
                     var keyName = dataGridViewCategoryKeys.CurrentCell.Value.ToString();
-                    var formAboutKey = new AboutKey(keyId, keyName);
+                    var formAboutKey = new AboutKey(currentCategory, keyId, keyName);
                     formAboutKey.ShowDialog(this);
                 }
             }
