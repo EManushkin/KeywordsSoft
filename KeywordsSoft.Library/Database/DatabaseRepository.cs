@@ -178,12 +178,12 @@ namespace KeywordsSoft.Library.Database
                             }
 
                             StringBuilder val = new StringBuilder();
-                            foreach (var itemVal in values)
-                            {
-                                val.Append(itemVal + ", ");
-                            }
+                            val.Append(string.Join(",", values));
 
-                            val.Remove(val.Length - 2, 2);
+                            //foreach (var itemVal in values)
+                            //{
+                            //    val.Append(string.Join(",", itemVal));
+                            //}
 
                             sqLiteCommand.CommandText = $"INSERT INTO {typeof(T).Name} ({types}) VALUES {val};";
                             sqLiteCommand.ExecuteNonQuery();
