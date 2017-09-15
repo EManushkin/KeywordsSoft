@@ -118,7 +118,7 @@ namespace KeywordsSoft.Program
             }
 
             cbParserSelect.Items.Add(new ComboBoxItem() { Text = "Все", Value = (long)-1 });
-            cbParserSelect.Items.AddRange(ParsersList.Select(x => new ComboBoxItem() { Text = $"{x.name}_{x.type}", Value = x.id }).OrderBy(x => x.Text).ToArray());
+            cbParserSelect.Items.AddRange(ParsersList.Select(x => new ComboBoxItem() { Text = $"{x.type}_{x.name}", Value = x.id }).OrderBy(x => x.Text).ToArray());
             cbParserSelect.SelectedIndex = 0;
         }
 
@@ -196,6 +196,8 @@ namespace KeywordsSoft.Program
             cbFilterOperator.Enabled = false;
             tbFilterValue.Enabled = false;
             btnFilter.Enabled = false;
+
+            ckBox.Checked = false;
         }
 
         private void ckBox_CheckedChanged(object sender, EventArgs e)

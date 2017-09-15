@@ -87,7 +87,7 @@ namespace KeywordsSoft.Library.Database
             return null;
         }
 
-        public List<T> Select<T>(string path, string dbName, string filter = null) where T : class, new()
+        public List<T> Select<T>(string path, string dbName, string filter = null, string selectExpression = "*") where T : class, new()
         {
             List<T> list = new List<T>();
 
@@ -109,8 +109,8 @@ namespace KeywordsSoft.Library.Database
                             sqLiteCommand.Connection = connection;
 
                             string command = filter == null
-                                ? $"SELECT * FROM {typeof(T).Name} LIMIT {limit}"
-                                : $"SELECT * FROM {typeof(T).Name} WHERE {filter} LIMIT {limit}";
+                                ? $"SELECT {selectExpression} FROM {typeof(T).Name} LIMIT {limit}"
+                                : $"SELECT {selectExpression} FROM {typeof(T).Name} WHERE {filter} LIMIT {limit}";
 
                             sqLiteCommand.CommandText = command;
 
@@ -120,17 +120,21 @@ namespace KeywordsSoft.Library.Database
                                 obj = Activator.CreateInstance<T>();
                                 foreach (PropertyInfo prop in obj.GetType().GetProperties())
                                 {
-                                    if (!object.Equals(reader[prop.Name], DBNull.Value))
+                                    try
                                     {
-                                        if (prop.PropertyType.Equals(typeof(bool?)))
+                                        if (!object.Equals(reader[prop.Name], DBNull.Value))
                                         {
-                                            prop.SetValue(obj, object.Equals(reader[prop.Name], string.Empty) ? (Nullable<bool>)null : Convert.ToBoolean(reader[prop.Name]), null);
-                                        }
-                                        else
-                                        {
-                                            prop.SetValue(obj, reader[prop.Name] == DBNull.Value ? null : reader[prop.Name], null);
+                                            if (prop.PropertyType.Equals(typeof(bool?)))
+                                            {
+                                                prop.SetValue(obj, object.Equals(reader[prop.Name], string.Empty) ? (Nullable<bool>)null : Convert.ToBoolean(reader[prop.Name]), null);
+                                            }
+                                            else
+                                            {
+                                                prop.SetValue(obj, reader[prop.Name] == DBNull.Value ? null : reader[prop.Name], null);
+                                            }
                                         }
                                     }
+                                    catch (Exception ex) { }
                                 }
                                 list.Add(obj);
                             }

@@ -50,17 +50,13 @@ namespace KeywordsSoft.Library.Helpers
 
         public bool Delete(string dbName, List<string> keysIds)
         {
-            string ids = string.Empty;
-            keysIds.ForEach(k => ids += $"{k},");
-            ids = ids.Remove(ids.LastIndexOf(','), 1);
+            string ids = string.Join(",", keysIds);
             return Database.Delete<Keys>(Path, dbName, $"id in ({ids})");
         }
 
         public bool MoveToAnotherDatabase(string dbNameFrom, string dbNameTo, List<string> keysIds)
         {
-            string ids = string.Empty;
-            keysIds.ForEach(k => ids += $"{k},");
-            ids = ids.Remove(ids.LastIndexOf(','), 1);
+            string ids = string.Join(",", keysIds);
             return Database.MoveToAnotherDatabase<Keys>(Path, dbNameFrom, dbNameTo, $"id in ({ids})");
         }
     }

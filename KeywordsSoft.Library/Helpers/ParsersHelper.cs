@@ -65,13 +65,13 @@ namespace KeywordsSoft.Library.Helpers
                     //TODO parse algorithm
                     foreach (var keyId in keysIds)
                     {
-                        var count = rnd.Next(10, 30);
+                        var count = rnd.Next(10, 20);
                         for (int i = 0; i < count; i++)
                         {
                             //(key_id, text, spin, parser_id, url)
                             if (rnd.Next(0, 2) == 0)
                             {
-                                values.Add($"('{keyId}', 'parse_text_{DateTime.Now.Ticks + i}', '', '{parser.id}', '')");
+                                values.Add($"('{keyId}', 'parse_text_{DateTime.Now.Ticks + i}', '', '{parser.id}', 'parse_url_www_{DateTime.Now.Ticks + i}')");
                             }
                             else
                             {
@@ -86,7 +86,7 @@ namespace KeywordsSoft.Library.Helpers
                     //TODO parse algorithm
                     foreach (var keyId in keysIds)
                     {
-                        var count = rnd.Next(10, 30);
+                        var count = rnd.Next(10, 50);
                         for (int i = 0; i < count; i++)
                         {
                             values.Add($"('{keyId}', 'parse_text_{DateTime.Now.Ticks + i}', '{parser.id}')");
@@ -99,7 +99,7 @@ namespace KeywordsSoft.Library.Helpers
                     //TODO parse algorithm
                     foreach (var keyId in keysIds)
                     {
-                        var count = rnd.Next(10, 30);
+                        var count = rnd.Next(10, 50);
                         for (int i = 0; i < count; i++)
                         {
                             values.Add($"('{keyId}', 'parse_text_{DateTime.Now.Ticks + i}', '{parser.id}')");
@@ -112,7 +112,7 @@ namespace KeywordsSoft.Library.Helpers
                     //TODO parse algorithm
                     foreach (var keyId in keysIds)
                     {
-                        var count = rnd.Next(10, 30);
+                        var count = rnd.Next(20, 30);
                         for (int i = 0; i < count; i++)
                         {
                             values.Add($"('{keyId}', 'parse_text_{DateTime.Now.Ticks + i}', '{parser.id}')");
@@ -125,7 +125,7 @@ namespace KeywordsSoft.Library.Helpers
                     //TODO parse algorithm
                     foreach (var keyId in keysIds)
                     {
-                        var count = rnd.Next(10, 30);
+                        var count = rnd.Next(20, 30);
                         for (int i = 0; i < count; i++)
                         {
                             values.Add($"('{keyId}', 'parse_text_{DateTime.Now.Ticks + i}', '{parser.id}')");

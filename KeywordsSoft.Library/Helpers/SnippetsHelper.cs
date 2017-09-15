@@ -36,9 +36,9 @@ namespace KeywordsSoft.Library.Helpers
             Database.Delete(Path + dbName + "_snippets");
         }
 
-        public List<Snippets> Select(string dbName, string filter = null)
+        public List<Snippets> Select(string dbName, string filter = null, string selectExpression = "*")
         {
-            return Database.Select<Snippets>(Path, dbName + "_snippets", filter);
+            return Database.Select<Snippets>(Path, dbName + "_snippets", filter, selectExpression);
         }
 
         public bool Add(string dbName, List<string> values)
@@ -48,25 +48,19 @@ namespace KeywordsSoft.Library.Helpers
 
         public bool DeleteParserRelationships(string dbName, List<string> keysIds, Parsers parser)
         {
-            string ids = string.Empty;
-            keysIds.ForEach(k => ids += $"{k},");
-            ids = ids.Remove(ids.LastIndexOf(','), 1);
+            string ids = string.Join(",", keysIds);
             return Database.Delete<Snippets>(Path, dbName + "_snippets", $"parser_id = {parser.id} and key_id in ({ids})");
         }
 
         public bool DeleteKeysRelationships(string dbName, List<string> keysIds)
         {
-            string ids = string.Empty;
-            keysIds.ForEach(k => ids += $"{k},");
-            ids = ids.Remove(ids.LastIndexOf(','), 1);
+            string ids = string.Join(",", keysIds);
             return Database.Delete<Snippets>(Path, dbName + "_snippets", $"key_id in ({ids})");
         }
 
         public bool MoveToAnotherDatabase(string dbNameFrom, string dbNameTo, List<string> keysIds)
         {
-            string ids = string.Empty;
-            keysIds.ForEach(k => ids += $"{k},");
-            ids = ids.Remove(ids.LastIndexOf(','), 1);
+            string ids = string.Join(",", keysIds);
             return Database.MoveToAnotherDatabase<Snippets>(Path, dbNameFrom + "_snippets", dbNameTo + "_snippets", $"key_id in ({ids})");
         }
     }

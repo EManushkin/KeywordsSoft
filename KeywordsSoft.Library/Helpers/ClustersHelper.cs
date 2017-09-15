@@ -45,17 +45,13 @@ namespace KeywordsSoft.Library.Helpers
 
         public bool DeleteKeysRelationships(string dbName, List<string> keysIds)
         {
-            string ids = string.Empty;
-            keysIds.ForEach(k => ids += $"{k},");
-            ids = ids.Remove(ids.LastIndexOf(','), 1);
+            string ids = string.Join(",", keysIds);
             return Database.Delete<Keys_Clusters>(Path, dbName + "_clusters", $"key_id in ({ids})");
         }
 
         public bool MoveToAnotherDatabase(string dbNameFrom, string dbNameTo, List<string> keysIds)
         {
-            string ids = string.Empty;
-            keysIds.ForEach(k => ids += $"{k},");
-            ids = ids.Remove(ids.LastIndexOf(','), 1);
+            string ids = string.Join(",", keysIds);
             return Database.MoveToAnotherDatabase<Keys_Clusters>(Path, dbNameFrom + "_clusters", dbNameTo + "_clusters", $"key_id in ({ids})");
         }
     }
