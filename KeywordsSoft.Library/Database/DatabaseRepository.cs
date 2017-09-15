@@ -91,7 +91,7 @@ namespace KeywordsSoft.Library.Database
         {
             List<T> list = new List<T>();
 
-            if (File.Exists(path + dbName + ".db"))
+            if (Directory.Exists(path) && File.Exists(path + dbName + ".db"))
             {
                 try
                 {
@@ -152,7 +152,7 @@ namespace KeywordsSoft.Library.Database
 
         public bool Add<T>(string path, string dbName, List<string> values) where T : class, new()
         {
-            if (File.Exists(path + dbName + ".db"))
+            if (Directory.Exists(path) && File.Exists(path + dbName + ".db"))
             {
                 try
                 {
@@ -206,7 +206,7 @@ namespace KeywordsSoft.Library.Database
 
         public bool Delete<T>(string path, string dbName, string filter = null) where T : class
         {
-            if (File.Exists(path + dbName + ".db"))
+            if (Directory.Exists(path) && File.Exists(path + dbName + ".db"))
             {
                 try
                 {
@@ -243,7 +243,7 @@ namespace KeywordsSoft.Library.Database
         {
             DataTable result = null;
 
-            if (File.Exists(path + dbNameFrom + ".db") && File.Exists(path + dbNameTo + ".db"))
+            if (Directory.Exists(path) && File.Exists(path + dbNameFrom + ".db") && File.Exists(path + dbNameTo + ".db"))
             {
                 try
                 {
