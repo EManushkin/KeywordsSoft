@@ -30,19 +30,31 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutKey));
             this.tabControlAboutKey = new System.Windows.Forms.TabControl();
-            this.tabTexts = new System.Windows.Forms.TabPage();
-            this.tabImages = new System.Windows.Forms.TabPage();
-            this.tabVideos = new System.Windows.Forms.TabPage();
-            this.tabSuggests = new System.Windows.Forms.TabPage();
-            this.tabSnippets = new System.Windows.Forms.TabPage();
+            this.textsTab = new System.Windows.Forms.TabPage();
+            this.textsTabDataGridView = new System.Windows.Forms.DataGridView();
+            this.imagesTab = new System.Windows.Forms.TabPage();
+            this.imagesTabDataGridView = new System.Windows.Forms.DataGridView();
+            this.videosTab = new System.Windows.Forms.TabPage();
+            this.videosTabDataGridView = new System.Windows.Forms.DataGridView();
+            this.suggestsTab = new System.Windows.Forms.TabPage();
+            this.suggestsTabDataGridView = new System.Windows.Forms.DataGridView();
+            this.snippetsTab = new System.Windows.Forms.TabPage();
+            this.snippetsTabDataGridView = new System.Windows.Forms.DataGridView();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.labelKeyName = new System.Windows.Forms.Label();
             this.btnBack = new System.Windows.Forms.Button();
-            this.dataGridViewTexts = new System.Windows.Forms.DataGridView();
+            this.labelKeyName = new System.Windows.Forms.Label();
             this.tabControlAboutKey.SuspendLayout();
-            this.tabTexts.SuspendLayout();
+            this.textsTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.textsTabDataGridView)).BeginInit();
+            this.imagesTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.imagesTabDataGridView)).BeginInit();
+            this.videosTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.videosTabDataGridView)).BeginInit();
+            this.suggestsTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.suggestsTabDataGridView)).BeginInit();
+            this.snippetsTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.snippetsTabDataGridView)).BeginInit();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTexts)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControlAboutKey
@@ -50,69 +62,170 @@
             this.tabControlAboutKey.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControlAboutKey.Controls.Add(this.tabTexts);
-            this.tabControlAboutKey.Controls.Add(this.tabImages);
-            this.tabControlAboutKey.Controls.Add(this.tabVideos);
-            this.tabControlAboutKey.Controls.Add(this.tabSuggests);
-            this.tabControlAboutKey.Controls.Add(this.tabSnippets);
+            this.tabControlAboutKey.Controls.Add(this.textsTab);
+            this.tabControlAboutKey.Controls.Add(this.imagesTab);
+            this.tabControlAboutKey.Controls.Add(this.videosTab);
+            this.tabControlAboutKey.Controls.Add(this.suggestsTab);
+            this.tabControlAboutKey.Controls.Add(this.snippetsTab);
             this.tabControlAboutKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.tabControlAboutKey.Location = new System.Drawing.Point(0, 50);
             this.tabControlAboutKey.Name = "tabControlAboutKey";
             this.tabControlAboutKey.SelectedIndex = 0;
             this.tabControlAboutKey.Size = new System.Drawing.Size(851, 450);
             this.tabControlAboutKey.TabIndex = 0;
+            this.tabControlAboutKey.SelectedIndexChanged += new System.EventHandler(this.tabControlAboutKey_SelectedIndexChanged);
             // 
-            // tabTexts
+            // textsTab
             // 
-            this.tabTexts.BackColor = System.Drawing.Color.LightCyan;
-            this.tabTexts.Controls.Add(this.dataGridViewTexts);
-            this.tabTexts.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.tabTexts.Location = new System.Drawing.Point(4, 25);
-            this.tabTexts.Name = "tabTexts";
-            this.tabTexts.Padding = new System.Windows.Forms.Padding(3);
-            this.tabTexts.Size = new System.Drawing.Size(843, 421);
-            this.tabTexts.TabIndex = 0;
-            this.tabTexts.Text = "Texts";
+            this.textsTab.BackColor = System.Drawing.Color.LightCyan;
+            this.textsTab.Controls.Add(this.textsTabDataGridView);
+            this.textsTab.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.textsTab.Location = new System.Drawing.Point(4, 25);
+            this.textsTab.Name = "textsTab";
+            this.textsTab.Padding = new System.Windows.Forms.Padding(3);
+            this.textsTab.Size = new System.Drawing.Size(843, 421);
+            this.textsTab.TabIndex = 0;
+            this.textsTab.Text = "Texts";
             // 
-            // tabImages
+            // textsTabDataGridView
             // 
-            this.tabImages.BackColor = System.Drawing.Color.LightCyan;
-            this.tabImages.Location = new System.Drawing.Point(4, 25);
-            this.tabImages.Name = "tabImages";
-            this.tabImages.Padding = new System.Windows.Forms.Padding(3);
-            this.tabImages.Size = new System.Drawing.Size(843, 421);
-            this.tabImages.TabIndex = 1;
-            this.tabImages.Text = "Images";
+            this.textsTabDataGridView.AllowUserToAddRows = false;
+            this.textsTabDataGridView.AllowUserToDeleteRows = false;
+            this.textsTabDataGridView.AllowUserToResizeColumns = false;
+            this.textsTabDataGridView.AllowUserToResizeRows = false;
+            this.textsTabDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.textsTabDataGridView.BackgroundColor = System.Drawing.Color.LightCyan;
+            this.textsTabDataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textsTabDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.textsTabDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textsTabDataGridView.Location = new System.Drawing.Point(3, 3);
+            this.textsTabDataGridView.MultiSelect = false;
+            this.textsTabDataGridView.Name = "textsTabDataGridView";
+            this.textsTabDataGridView.ReadOnly = true;
+            this.textsTabDataGridView.RowHeadersVisible = false;
+            this.textsTabDataGridView.Size = new System.Drawing.Size(837, 415);
+            this.textsTabDataGridView.TabIndex = 0;
+            this.textsTabDataGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.TabDataGridView_CellContentDoubleClick);
             // 
-            // tabVideos
+            // imagesTab
             // 
-            this.tabVideos.BackColor = System.Drawing.Color.LightCyan;
-            this.tabVideos.Location = new System.Drawing.Point(4, 25);
-            this.tabVideos.Name = "tabVideos";
-            this.tabVideos.Padding = new System.Windows.Forms.Padding(3);
-            this.tabVideos.Size = new System.Drawing.Size(843, 421);
-            this.tabVideos.TabIndex = 2;
-            this.tabVideos.Text = "Videos";
+            this.imagesTab.BackColor = System.Drawing.Color.LightCyan;
+            this.imagesTab.Controls.Add(this.imagesTabDataGridView);
+            this.imagesTab.Location = new System.Drawing.Point(4, 25);
+            this.imagesTab.Name = "imagesTab";
+            this.imagesTab.Padding = new System.Windows.Forms.Padding(3);
+            this.imagesTab.Size = new System.Drawing.Size(843, 421);
+            this.imagesTab.TabIndex = 1;
+            this.imagesTab.Text = "Images";
             // 
-            // tabSuggests
+            // imagesTabDataGridView
             // 
-            this.tabSuggests.BackColor = System.Drawing.Color.LightCyan;
-            this.tabSuggests.Location = new System.Drawing.Point(4, 22);
-            this.tabSuggests.Name = "tabSuggests";
-            this.tabSuggests.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSuggests.Size = new System.Drawing.Size(843, 424);
-            this.tabSuggests.TabIndex = 3;
-            this.tabSuggests.Text = "Suggests";
+            this.imagesTabDataGridView.AllowUserToAddRows = false;
+            this.imagesTabDataGridView.AllowUserToDeleteRows = false;
+            this.imagesTabDataGridView.AllowUserToResizeColumns = false;
+            this.imagesTabDataGridView.AllowUserToResizeRows = false;
+            this.imagesTabDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.imagesTabDataGridView.BackgroundColor = System.Drawing.Color.LightCyan;
+            this.imagesTabDataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.imagesTabDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.imagesTabDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.imagesTabDataGridView.Location = new System.Drawing.Point(3, 3);
+            this.imagesTabDataGridView.MultiSelect = false;
+            this.imagesTabDataGridView.Name = "imagesTabDataGridView";
+            this.imagesTabDataGridView.ReadOnly = true;
+            this.imagesTabDataGridView.RowHeadersVisible = false;
+            this.imagesTabDataGridView.Size = new System.Drawing.Size(837, 415);
+            this.imagesTabDataGridView.TabIndex = 1;
             // 
-            // tabSnippets
+            // videosTab
             // 
-            this.tabSnippets.BackColor = System.Drawing.Color.LightCyan;
-            this.tabSnippets.Location = new System.Drawing.Point(4, 22);
-            this.tabSnippets.Name = "tabSnippets";
-            this.tabSnippets.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSnippets.Size = new System.Drawing.Size(843, 424);
-            this.tabSnippets.TabIndex = 4;
-            this.tabSnippets.Text = "Snippets";
+            this.videosTab.BackColor = System.Drawing.Color.LightCyan;
+            this.videosTab.Controls.Add(this.videosTabDataGridView);
+            this.videosTab.Location = new System.Drawing.Point(4, 25);
+            this.videosTab.Name = "videosTab";
+            this.videosTab.Padding = new System.Windows.Forms.Padding(3);
+            this.videosTab.Size = new System.Drawing.Size(843, 421);
+            this.videosTab.TabIndex = 2;
+            this.videosTab.Text = "Videos";
+            // 
+            // videosTabDataGridView
+            // 
+            this.videosTabDataGridView.AllowUserToAddRows = false;
+            this.videosTabDataGridView.AllowUserToDeleteRows = false;
+            this.videosTabDataGridView.AllowUserToResizeColumns = false;
+            this.videosTabDataGridView.AllowUserToResizeRows = false;
+            this.videosTabDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.videosTabDataGridView.BackgroundColor = System.Drawing.Color.LightCyan;
+            this.videosTabDataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.videosTabDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.videosTabDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.videosTabDataGridView.Location = new System.Drawing.Point(3, 3);
+            this.videosTabDataGridView.MultiSelect = false;
+            this.videosTabDataGridView.Name = "videosTabDataGridView";
+            this.videosTabDataGridView.ReadOnly = true;
+            this.videosTabDataGridView.RowHeadersVisible = false;
+            this.videosTabDataGridView.Size = new System.Drawing.Size(837, 415);
+            this.videosTabDataGridView.TabIndex = 1;
+            // 
+            // suggestsTab
+            // 
+            this.suggestsTab.BackColor = System.Drawing.Color.LightCyan;
+            this.suggestsTab.Controls.Add(this.suggestsTabDataGridView);
+            this.suggestsTab.Location = new System.Drawing.Point(4, 25);
+            this.suggestsTab.Name = "suggestsTab";
+            this.suggestsTab.Padding = new System.Windows.Forms.Padding(3);
+            this.suggestsTab.Size = new System.Drawing.Size(843, 421);
+            this.suggestsTab.TabIndex = 3;
+            this.suggestsTab.Text = "Suggests";
+            // 
+            // suggestsTabDataGridView
+            // 
+            this.suggestsTabDataGridView.AllowUserToAddRows = false;
+            this.suggestsTabDataGridView.AllowUserToDeleteRows = false;
+            this.suggestsTabDataGridView.AllowUserToResizeColumns = false;
+            this.suggestsTabDataGridView.AllowUserToResizeRows = false;
+            this.suggestsTabDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.suggestsTabDataGridView.BackgroundColor = System.Drawing.Color.LightCyan;
+            this.suggestsTabDataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.suggestsTabDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.suggestsTabDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.suggestsTabDataGridView.Location = new System.Drawing.Point(3, 3);
+            this.suggestsTabDataGridView.MultiSelect = false;
+            this.suggestsTabDataGridView.Name = "suggestsTabDataGridView";
+            this.suggestsTabDataGridView.ReadOnly = true;
+            this.suggestsTabDataGridView.RowHeadersVisible = false;
+            this.suggestsTabDataGridView.Size = new System.Drawing.Size(837, 415);
+            this.suggestsTabDataGridView.TabIndex = 2;
+            // 
+            // snippetsTab
+            // 
+            this.snippetsTab.BackColor = System.Drawing.Color.LightCyan;
+            this.snippetsTab.Controls.Add(this.snippetsTabDataGridView);
+            this.snippetsTab.Location = new System.Drawing.Point(4, 25);
+            this.snippetsTab.Name = "snippetsTab";
+            this.snippetsTab.Padding = new System.Windows.Forms.Padding(3);
+            this.snippetsTab.Size = new System.Drawing.Size(843, 421);
+            this.snippetsTab.TabIndex = 4;
+            this.snippetsTab.Text = "Snippets";
+            // 
+            // snippetsTabDataGridView
+            // 
+            this.snippetsTabDataGridView.AllowUserToAddRows = false;
+            this.snippetsTabDataGridView.AllowUserToDeleteRows = false;
+            this.snippetsTabDataGridView.AllowUserToResizeColumns = false;
+            this.snippetsTabDataGridView.AllowUserToResizeRows = false;
+            this.snippetsTabDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.snippetsTabDataGridView.BackgroundColor = System.Drawing.Color.LightCyan;
+            this.snippetsTabDataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.snippetsTabDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.snippetsTabDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.snippetsTabDataGridView.Location = new System.Drawing.Point(3, 3);
+            this.snippetsTabDataGridView.MultiSelect = false;
+            this.snippetsTabDataGridView.Name = "snippetsTabDataGridView";
+            this.snippetsTabDataGridView.ReadOnly = true;
+            this.snippetsTabDataGridView.RowHeadersVisible = false;
+            this.snippetsTabDataGridView.Size = new System.Drawing.Size(837, 415);
+            this.snippetsTabDataGridView.TabIndex = 3;
             // 
             // panel1
             // 
@@ -125,19 +238,8 @@
             this.panel1.Size = new System.Drawing.Size(850, 45);
             this.panel1.TabIndex = 2;
             // 
-            // labelKeyName
-            // 
-            this.labelKeyName.AutoSize = true;
-            this.labelKeyName.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labelKeyName.ForeColor = System.Drawing.Color.White;
-            this.labelKeyName.Location = new System.Drawing.Point(58, 16);
-            this.labelKeyName.Name = "labelKeyName";
-            this.labelKeyName.Size = new System.Drawing.Size(0, 24);
-            this.labelKeyName.TabIndex = 0;
-            // 
             // btnBack
             // 
-            this.btnBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnBack.BackColor = System.Drawing.Color.Transparent;
             this.btnBack.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnBack.FlatAppearance.BorderColor = System.Drawing.Color.White;
@@ -145,31 +247,22 @@
             this.btnBack.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBack.ForeColor = System.Drawing.Color.Transparent;
             this.btnBack.Image = ((System.Drawing.Image)(resources.GetObject("btnBack.Image")));
-            this.btnBack.Location = new System.Drawing.Point(10, 5);
+            this.btnBack.Location = new System.Drawing.Point(8, 5);
             this.btnBack.Name = "btnBack";
             this.btnBack.Size = new System.Drawing.Size(42, 35);
             this.btnBack.TabIndex = 11;
             this.btnBack.UseVisualStyleBackColor = false;
             this.btnBack.Click += new System.EventHandler(this.btnBack_Click);
             // 
-            // dataGridViewTexts
+            // labelKeyName
             // 
-            this.dataGridViewTexts.AllowUserToAddRows = false;
-            this.dataGridViewTexts.AllowUserToDeleteRows = false;
-            this.dataGridViewTexts.AllowUserToResizeColumns = false;
-            this.dataGridViewTexts.AllowUserToResizeRows = false;
-            this.dataGridViewTexts.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dataGridViewTexts.BackgroundColor = System.Drawing.Color.LightCyan;
-            this.dataGridViewTexts.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dataGridViewTexts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewTexts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewTexts.Location = new System.Drawing.Point(3, 3);
-            this.dataGridViewTexts.MultiSelect = false;
-            this.dataGridViewTexts.Name = "dataGridViewTexts";
-            this.dataGridViewTexts.ReadOnly = true;
-            this.dataGridViewTexts.RowHeadersVisible = false;
-            this.dataGridViewTexts.Size = new System.Drawing.Size(837, 415);
-            this.dataGridViewTexts.TabIndex = 0;
+            this.labelKeyName.AutoSize = true;
+            this.labelKeyName.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labelKeyName.ForeColor = System.Drawing.Color.White;
+            this.labelKeyName.Location = new System.Drawing.Point(66, 13);
+            this.labelKeyName.Name = "labelKeyName";
+            this.labelKeyName.Size = new System.Drawing.Size(0, 24);
+            this.labelKeyName.TabIndex = 0;
             // 
             // AboutKey
             // 
@@ -189,10 +282,18 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "AboutKey";
             this.tabControlAboutKey.ResumeLayout(false);
-            this.tabTexts.ResumeLayout(false);
+            this.textsTab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.textsTabDataGridView)).EndInit();
+            this.imagesTab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.imagesTabDataGridView)).EndInit();
+            this.videosTab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.videosTabDataGridView)).EndInit();
+            this.suggestsTab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.suggestsTabDataGridView)).EndInit();
+            this.snippetsTab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.snippetsTabDataGridView)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTexts)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -200,14 +301,18 @@
         #endregion
 
         private System.Windows.Forms.TabControl tabControlAboutKey;
-        private System.Windows.Forms.TabPage tabTexts;
-        private System.Windows.Forms.TabPage tabImages;
+        private System.Windows.Forms.TabPage textsTab;
+        private System.Windows.Forms.TabPage imagesTab;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label labelKeyName;
-        private System.Windows.Forms.TabPage tabVideos;
-        private System.Windows.Forms.TabPage tabSuggests;
-        private System.Windows.Forms.TabPage tabSnippets;
+        private System.Windows.Forms.TabPage videosTab;
+        private System.Windows.Forms.TabPage suggestsTab;
+        private System.Windows.Forms.TabPage snippetsTab;
         private System.Windows.Forms.Button btnBack;
-        public System.Windows.Forms.DataGridView dataGridViewTexts;
+        public System.Windows.Forms.DataGridView textsTabDataGridView;
+        public System.Windows.Forms.DataGridView imagesTabDataGridView;
+        public System.Windows.Forms.DataGridView videosTabDataGridView;
+        public System.Windows.Forms.DataGridView suggestsTabDataGridView;
+        public System.Windows.Forms.DataGridView snippetsTabDataGridView;
     }
 }

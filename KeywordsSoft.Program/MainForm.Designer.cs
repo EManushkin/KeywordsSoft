@@ -55,6 +55,7 @@
             this.cbFilterField = new System.Windows.Forms.ComboBox();
             this.cbFilterOperator = new System.Windows.Forms.ComboBox();
             this.tbFilterValue = new System.Windows.Forms.TextBox();
+            this.btnFilterRemove = new System.Windows.Forms.Button();
             this.btnFilter = new System.Windows.Forms.Button();
             this.btnDeleteCategory = new System.Windows.Forms.Button();
             this.actionMenu_addKeys = new System.Windows.Forms.ToolStripMenuItem();
@@ -68,6 +69,7 @@
             this.actionMenu_parseItem_all = new System.Windows.Forms.ToolStripMenuItem();
             this.actionMenu_moveItem = new System.Windows.Forms.ToolStripMenuItem();
             this.actionMenu_deleteItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelRowsCount = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCategoryKeys)).BeginInit();
             this.SuspendLayout();
@@ -311,7 +313,7 @@
             this.cbFilterField.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.cbFilterField.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.cbFilterField.FormattingEnabled = true;
-            this.cbFilterField.Location = new System.Drawing.Point(502, 68);
+            this.cbFilterField.Location = new System.Drawing.Point(420, 68);
             this.cbFilterField.Name = "cbFilterField";
             this.cbFilterField.Size = new System.Drawing.Size(150, 24);
             this.cbFilterField.TabIndex = 7;
@@ -332,7 +334,7 @@
             "<",
             ">=",
             "<="});
-            this.cbFilterOperator.Location = new System.Drawing.Point(658, 68);
+            this.cbFilterOperator.Location = new System.Drawing.Point(578, 68);
             this.cbFilterOperator.Name = "cbFilterOperator";
             this.cbFilterOperator.Size = new System.Drawing.Size(100, 24);
             this.cbFilterOperator.TabIndex = 8;
@@ -342,11 +344,29 @@
             this.tbFilterValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.tbFilterValue.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.tbFilterValue.Enabled = false;
-            this.tbFilterValue.Location = new System.Drawing.Point(764, 68);
+            this.tbFilterValue.Location = new System.Drawing.Point(684, 68);
             this.tbFilterValue.Name = "tbFilterValue";
-            this.tbFilterValue.Size = new System.Drawing.Size(120, 13);
+            this.tbFilterValue.Size = new System.Drawing.Size(160, 13);
             this.tbFilterValue.TabIndex = 9;
             this.tbFilterValue.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // btnFilterRemove
+            // 
+            this.btnFilterRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnFilterRemove.BackColor = System.Drawing.Color.Transparent;
+            this.btnFilterRemove.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnFilterRemove.Enabled = false;
+            this.btnFilterRemove.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.btnFilterRemove.FlatAppearance.BorderSize = 0;
+            this.btnFilterRemove.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFilterRemove.ForeColor = System.Drawing.Color.Transparent;
+            this.btnFilterRemove.Image = global::KeywordsSoft.Program.Properties.Resources.filter_remove_icon_25;
+            this.btnFilterRemove.Location = new System.Drawing.Point(890, 68);
+            this.btnFilterRemove.Name = "btnFilterRemove";
+            this.btnFilterRemove.Size = new System.Drawing.Size(25, 25);
+            this.btnFilterRemove.TabIndex = 11;
+            this.btnFilterRemove.UseVisualStyleBackColor = false;
+            this.btnFilterRemove.Click += new System.EventHandler(this.btnFilterRemove_Click);
             // 
             // btnFilter
             // 
@@ -359,7 +379,7 @@
             this.btnFilter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFilter.ForeColor = System.Drawing.Color.Transparent;
             this.btnFilter.Image = global::KeywordsSoft.Program.Properties.Resources.filter_icon_25;
-            this.btnFilter.Location = new System.Drawing.Point(890, 68);
+            this.btnFilter.Location = new System.Drawing.Point(855, 67);
             this.btnFilter.Name = "btnFilter";
             this.btnFilter.Size = new System.Drawing.Size(25, 25);
             this.btnFilter.TabIndex = 10;
@@ -465,12 +485,23 @@
             this.actionMenu_deleteItem.Text = "Удалить ключи";
             this.actionMenu_deleteItem.Click += new System.EventHandler(this.actionMenu_deleteItem_Click);
             // 
+            // labelRowsCount
+            // 
+            this.labelRowsCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelRowsCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labelRowsCount.Location = new System.Drawing.Point(715, 544);
+            this.labelRowsCount.Name = "labelRowsCount";
+            this.labelRowsCount.Size = new System.Drawing.Size(200, 20);
+            this.labelRowsCount.TabIndex = 12;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(938, 578);
+            this.Controls.Add(this.labelRowsCount);
+            this.Controls.Add(this.btnFilterRemove);
             this.Controls.Add(this.btnFilter);
             this.Controls.Add(this.tbFilterValue);
             this.Controls.Add(this.cbFilterOperator);
@@ -487,6 +518,7 @@
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Keywords Soft";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCategoryKeys)).EndInit();
@@ -535,6 +567,8 @@
         private System.Windows.Forms.ComboBox cbFilterOperator;
         private System.Windows.Forms.TextBox tbFilterValue;
         private System.Windows.Forms.Button btnFilter;
+        private System.Windows.Forms.Button btnFilterRemove;
+        private System.Windows.Forms.Label labelRowsCount;
     }
 }
 

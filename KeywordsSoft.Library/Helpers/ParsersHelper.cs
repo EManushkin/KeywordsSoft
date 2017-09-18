@@ -3,6 +3,7 @@ using KeywordsSoft.Library.Entities;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace KeywordsSoft.Library.Helpers
 {
     public class ParsersHelper
     {
-        private string Path = ""; //$@"{ConfigurationManager.AppSettings["DatabasePath"]}\parsers\";
+        private string Path = Directory.GetCurrentDirectory() + "\\"; //$@"{ConfigurationManager.AppSettings["DatabasePath"]}\parsers\";
 
         private string CreateCommand = @"CREATE TABLE parsers(
                                             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 

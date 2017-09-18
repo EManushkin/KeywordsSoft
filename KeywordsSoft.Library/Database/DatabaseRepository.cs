@@ -168,26 +168,11 @@ namespace KeywordsSoft.Library.Database
                             sqLiteCommand.CommandTimeout = 10;
                             sqLiteCommand.Connection = connection;
 
-                            string types = "";
-                            List<PropertyInfo> properties = new List<PropertyInfo>(); 
                             obj = Activator.CreateInstance<T>();
-                            foreach (PropertyInfo prop in obj.GetType().GetProperties())
-                            {
-                                types = string.IsNullOrEmpty(types) ? "" : types + ", ";
-                                if (prop.Name != "id")
-                                {
-                                    properties.Add(prop);
-                                    types += prop.Name;
-                                }
-                            }
 
-                            StringBuilder val = new StringBuilder();
-                            val.Append(string.Join(",", values));
+                            string types = string.Join(",", obj.GetType().GetProperties().Where(x => x.Name != "id").Select(x => x.Name));
 
-                            //foreach (var itemVal in values)
-                            //{
-                            //    val.Append(string.Join(",", itemVal));
-                            //}
+                            string val = string.Join(",", values);
 
                             sqLiteCommand.CommandText = $"INSERT INTO {typeof(T).Name} ({types}) VALUES {val};";
                             sqLiteCommand.ExecuteNonQuery();
@@ -224,7 +209,7 @@ namespace KeywordsSoft.Library.Database
                                 ? $"DELETE FROM {typeof(T).Name};"
                                 : $"DELETE FROM {typeof(T).Name} WHERE {filter};";
 
-                            sqLiteCommand.CommandText = command;
+                            sqLiteCommand.CommandText = command + "VACUUM;";
                             sqLiteCommand.ExecuteNonQuery();
                         }
 
@@ -265,68 +250,46 @@ namespace KeywordsSoft.Library.Database
                             result.Load(sqLiteCommand.ExecuteReader());
 
                             command = $"DELETE FROM {typeof(T).Name} WHERE {filter};";
-                            sqLiteCommand.CommandText = command;
+                            sqLiteCommand.CommandText = command + "VACUUM;";
                             sqLiteCommand.ExecuteNonQuery();
                         }
 
                         connectionFrom.Close();
                     }
 
-                    using (var connectionTo = new SQLiteConnection(GetConnectionString(path + dbNameTo)))
+                    if (result.Rows.Count > 0)
                     {
-                        connectionTo.Open();
-
-                        T obj = default(T);
-
-                        using (SQLiteTransaction transaction = connectionTo.BeginTransaction())
+                        using (var connectionTo = new SQLiteConnection(GetConnectionString(path + dbNameTo)))
                         {
-                            using (SQLiteCommand sqLiteCommand = new SQLiteCommand())
+                            connectionTo.Open();
+
+                            T obj = default(T);
+
+                            using (SQLiteTransaction transaction = connectionTo.BeginTransaction())
                             {
-                                sqLiteCommand.CommandType = CommandType.Text;
-                                sqLiteCommand.CommandTimeout = 10;
-                                sqLiteCommand.Connection = connectionTo;
-
-                                string types = "";
-                                List<PropertyInfo> properties = new List<PropertyInfo>();
-                                obj = Activator.CreateInstance<T>();
-                                foreach (PropertyInfo prop in obj.GetType().GetProperties())
+                                using (SQLiteCommand sqLiteCommand = new SQLiteCommand())
                                 {
-                                    types = string.IsNullOrEmpty(types) ? "" : types + ", ";
-                                    if (prop.Name != "id")
-                                    {
-                                        properties.Add(prop);
-                                        types += prop.Name;
-                                    }
+                                    sqLiteCommand.CommandType = CommandType.Text;
+                                    sqLiteCommand.CommandTimeout = 10;
+                                    sqLiteCommand.Connection = connectionTo;
+
+                                    obj = Activator.CreateInstance<T>();
+
+                                    string types = string.Join(",", obj.GetType().GetProperties().Where(x => x.Name != "id").Select(x => x.Name));
+
+                                    string val = string.Join(",", result.Rows.OfType<DataRow>()
+                                        .Select(r => $"({string.Join(",", r.ItemArray.Skip(1).Select(x => $"'{x.ToString()}'").ToArray())})"));
+
+                                    string command = $"INSERT INTO {typeof(T).Name} ({types}) VALUES {val};";
+                                    sqLiteCommand.CommandText = command;
+
+                                    sqLiteCommand.ExecuteNonQuery();
                                 }
 
-                                StringBuilder val = new StringBuilder();
-                                foreach (DataRow row in result.Rows)
-                                {
-                                    val.Append("(");
-                                    var length = row.ItemArray.Count();
-                                    for (int i = 1; i < row.ItemArray.Count(); i++)
-                                    {
-                                        val.Append($"'{row[i]}'" + ", ");
-                                    }
-                                    val.Remove(val.Length - 2, 2).Append("), ");
-
-                                }
-                                val.Remove(val.Length - 2, 2);
-
-                                foreach (DataRow row in result.Rows)
-                                {
-                                    var test = row.ItemArray;
-                                }
-
-                                string command = $"INSERT INTO {typeof(T).Name} ({types}) VALUES {val};";
-                                sqLiteCommand.CommandText = command;
-
-                                sqLiteCommand.ExecuteNonQuery();
+                                transaction.Commit();
                             }
-
-                            transaction.Commit();
+                            connectionTo.Close();
                         }
-                        connectionTo.Close();
                     }
                 }
                 catch (Exception ex)

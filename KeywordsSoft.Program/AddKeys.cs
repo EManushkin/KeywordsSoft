@@ -22,7 +22,7 @@ namespace KeywordsSoft.Program
         {
             InitializeComponent();
 
-            cbCategorySelect.Items.AddRange(new DatabaseHelper().GetСategories());
+            cbCategorySelect.Items.AddRange(Program.mainForm.helper.GetСategories());
             cbCategorySelect.SelectedIndex = 0;
         }
 

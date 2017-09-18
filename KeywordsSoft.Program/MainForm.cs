@@ -24,6 +24,8 @@ namespace KeywordsSoft.Program
         public List<MainTable> MainTableList { get; set; }
         public List<Parsers> ParsersList { get; set; }
 
+        public DatabaseHelper helper = new DatabaseHelper();
+             
         public BindingListView<MainTable> dgView { get; set; }
 
         private CheckBox ckBox { get; set; }
@@ -58,7 +60,7 @@ namespace KeywordsSoft.Program
 
             ToolStripItem categoryToolStripItem;
             ToolStripItem moveToolStripItem;
-            foreach (var item in new DatabaseHelper().GetСategories())
+            foreach (var item in helper.GetСategories())
             {
                 categoryToolStripItem = new ToolStripMenuItem();
                 categoryToolStripItem.Name = $"categoryMenu_{item}";
@@ -147,6 +149,11 @@ namespace KeywordsSoft.Program
             cbFilterOperator.SelectedIndex = 0;
         }
 
+        public void ShowRowsCount(int count)
+        {
+            labelRowsCount.Text = $"Количество строк: {count}";
+        }
+
         public void PaintDataGridViewCategoryKeys()
         {
             this.dataGridViewCategoryKeys.AutoGenerateColumns = false;
@@ -162,16 +169,16 @@ namespace KeywordsSoft.Program
 
         public void LoadDataGridViewCategoryKeys(string parserId = null)
         {
-            MainTableList = new DatabaseHelper().Select(currentCategory, parserId);
+            MainTableList = helper.Select(currentCategory, parserId);
             dgView = new BindingListView<MainTable>(MainTableList);
             dataGridViewCategoryKeys.DataSource = dgView;
+
+            ShowRowsCount(dgView.Count);
         }
 
         public void ResetForm()
         {
-            labelCategorySelected.Text = null;
             currentCategory = null;
-            btnDeleteCategory.Visible = false;
 
             CategoryChangeReset(false);
 
@@ -188,9 +195,13 @@ namespace KeywordsSoft.Program
 
             cbFilterField.Enabled = state;
 
+            btnDeleteCategory.Visible = state;
+
             cbFilterField.SelectedIndex = 0;
             cbFilterOperator.SelectedIndex = 0;
             cbParserSelect.SelectedIndex = 0;
+
+            labelCategorySelected.Text = currentCategory;
             tbFilterValue.Text = string.Empty;
 
             cbFilterOperator.Enabled = false;
@@ -202,10 +213,7 @@ namespace KeywordsSoft.Program
 
         private void ckBox_CheckedChanged(object sender, EventArgs e)
         {
-            for (int j = 0; j < this.dataGridViewCategoryKeys.RowCount; j++)
-            {
-                this.dataGridViewCategoryKeys[0, j].Value = this.ckBox.Checked;
-            }
+            dataGridViewCategoryKeys.Rows.Cast<DataGridViewRow>().Select(x => x.SetValues(ckBox.Checked)).ToArray();
             this.dataGridViewCategoryKeys.EndEdit();
         }
 
@@ -233,12 +241,8 @@ namespace KeywordsSoft.Program
 
             this.actionMenu_moveItem.DropDownItems[$"actionMenu_moveItem_{currentCategory}"].Enabled = false;
 
-            labelCategorySelected.Text = currentCategory;
-            btnDeleteCategory.Visible = true;
-
             LoadDataGridViewCategoryKeys();
         }
-
 
         private void btnDeleteCategory_Click(object sender, EventArgs e)
         {
@@ -246,7 +250,7 @@ namespace KeywordsSoft.Program
 
             if (confirmResult == DialogResult.Yes)
             {
-                new DatabaseHelper().DeleteCategoryDatabases(currentCategory);
+                helper.DeleteCategoryDatabases(currentCategory);
                 ResetForm();
             }
         }
@@ -261,9 +265,10 @@ namespace KeywordsSoft.Program
         {
             var ids = GetCheckedKeysIds();
 
-            if (new DatabaseHelper().DeleteKeysWithRelationships(currentCategory, ids))
+            if (helper.DeleteKeysWithRelationships(currentCategory, ids))
             {
                 LoadDataGridViewCategoryKeys();
+                ckBox.Checked = false;
             }
         }
 
@@ -274,8 +279,13 @@ namespace KeywordsSoft.Program
             var moveTo = item.Text;
             var ids = GetCheckedKeysIds();
 
-            if (new DatabaseHelper().MoveKeysToAnotherDatabase(currentCategory, moveTo, ids))
+            if (helper.MoveKeysToAnotherDatabase(currentCategory, moveTo, ids))
             {
+                this.actionMenu_moveItem.DropDownItems[$"actionMenu_moveItem_{currentCategory}"].Enabled = true;
+                currentCategory = moveTo;
+                this.actionMenu_moveItem.DropDownItems[$"actionMenu_moveItem_{currentCategory}"].Enabled = false;
+
+                CategoryChangeReset(true);
                 LoadDataGridViewCategoryKeys();
             }
         }
@@ -295,6 +305,8 @@ namespace KeywordsSoft.Program
                     if (confirmResult == DialogResult.OK)
                     {
                         LoadDataGridViewCategoryKeys();
+                        CategoryChangeReset(true);
+                        ckBox.Checked = false;
                     }
                 }
             }
@@ -305,6 +317,9 @@ namespace KeywordsSoft.Program
             ComboBoxItem item = (ComboBoxItem)cbParserSelect.SelectedItem;
             if (item != null && currentCategory != null)
             {
+                var sortProperty = dgView.SortProperty;
+                var sortDirection = dgView.SortDirection;
+
                 if ((long)item.Value == -1)
                 {
                     LoadDataGridViewCategoryKeys();
@@ -312,6 +327,13 @@ namespace KeywordsSoft.Program
                 else
                 {
                     LoadDataGridViewCategoryKeys(item.Value.ToString());
+                }
+
+                btnFilter.PerformClick();
+
+                if (sortProperty != null)
+                {
+                    dgView.ApplySort(sortProperty, sortDirection);
                 }
             }
         }
@@ -333,6 +355,7 @@ namespace KeywordsSoft.Program
 
                 tbFilterValue.Enabled = true;
                 btnFilter.Enabled = true;
+                btnFilterRemove.Enabled = true;
             }
         }
 
@@ -369,10 +392,26 @@ namespace KeywordsSoft.Program
                     Predicate<MainTable> pred = func.ExpressionToFunc().Invoke;
                     dgView.ApplyFilter(pred);
                     break;
-                default:
-                    dgView.RemoveFilter();
-                    break;
+                //default:
+                //    dgView.RemoveFilter();
+                //    break;
             }
+
+            ShowRowsCount(dgView.Count);
+        }
+
+        private void btnFilterRemove_Click(object sender, EventArgs e)
+        {           
+            dgView.RemoveFilter();
+            ShowRowsCount(dgView.Count);
+
+            cbFilterField.SelectedIndex = 0;
+            cbFilterOperator.SelectedIndex = 0;
+            cbFilterOperator.Enabled = false;
+            tbFilterValue.Text = string.Empty;
+            tbFilterValue.Enabled = false;
+            btnFilter.Enabled = false;
+            btnFilterRemove.Enabled = false;
         }
 
         private void dataGridViewCategoryKeys_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -388,5 +427,7 @@ namespace KeywordsSoft.Program
                 }
             }
         }
+
+        
     }
 }

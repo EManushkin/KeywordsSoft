@@ -59,7 +59,7 @@ namespace KeywordsSoft.Program
                 return;
             }
 
-            if (!new DatabaseHelper().CreateCategoryDatabases($"{language}_{tbCategoryName.Text}"))
+            if (!Program.mainForm.helper.CreateCategoryDatabases($"{language}_{tbCategoryName.Text}"))
             {
                 Validation("Категория с таким названием и языком уже существует!", Color.Red);
                 return;

@@ -164,6 +164,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="mann.ico" />
+    <None Include="Resources\filter_remove_icon_25.png" />
     <None Include="Resources\back_button_35.png" />
     <None Include="Resources\filter_icon_25.png" />
   </ItemGroup>
