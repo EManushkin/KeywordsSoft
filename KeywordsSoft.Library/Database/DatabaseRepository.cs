@@ -79,12 +79,12 @@ namespace KeywordsSoft.Library.Database
 
         public string[] GetСategories(string path)
         {
-            if (Directory.Exists(path))
+            if (!Directory.Exists(path))
             {
-                return Directory.GetFiles(path, "*.db").Select(file => Path.GetFileNameWithoutExtension(file)).OrderBy(file => file).ToArray();
+                Directory.CreateDirectory(path);
             }
 
-            return null;
+            return Directory.GetFiles(path, "*.db").Select(file => Path.GetFileNameWithoutExtension(file)).OrderBy(file => file).ToArray();
         }
 
         public List<T> Select<T>(string path, string dbName, string filter = null, string selectExpression = "*") where T : class, new()
