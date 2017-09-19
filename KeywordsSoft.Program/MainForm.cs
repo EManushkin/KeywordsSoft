@@ -172,8 +172,8 @@ namespace KeywordsSoft.Program
 
         public void LoadDataGridViewCategoryKeys(string parserId = null)
         {
-            MainTableList = helper.Select(currentCategory, parserId);
-            dgView = new BindingListView<MainTable>(MainTableList);
+            //MainTableList = helper.Select(currentCategory, parserId);
+            dgView = new BindingListView<MainTable>(helper.Select(currentCategory, parserId));//MainTableList
             dataGridViewCategoryKeys.DataSource = dgView;
 
             ShowRowsCount(dgView.Count);
@@ -191,9 +191,9 @@ namespace KeywordsSoft.Program
 
         public void CategoryChangeReset(bool state)
         {
-            //actionMenu_moveItem.Enabled = state;
-            //actionMenu_parseItem.Enabled = state;
-            //actionMenu_deleteItem.Enabled = state;
+            actionMenu_moveItem.Enabled = state;
+            actionMenu_parseItem.Enabled = state;
+            actionMenu_deleteItem.Enabled = state;
             cbParserSelect.Enabled = state;
 
             cbFilterField.Enabled = state;
@@ -215,11 +215,19 @@ namespace KeywordsSoft.Program
             progressBar1.Visible = state;
             progressBar1.Value = 0;
             labelPercent.Text = string.Empty;
+
+            GC.Collect();
         }
 
         private void ckBox_CheckedChanged(object sender, EventArgs e)
         {
-            dataGridViewCategoryKeys.Rows.Cast<DataGridViewRow>().Select(x => x.SetValues(ckBox.Checked)).ToArray();
+            //dataGridViewCategoryKeys.Rows.Cast<DataGridViewRow>().Select(x => x.SetValues(ckBox.Checked)).ToArray();
+            var test = dataGridViewCategoryKeys.Rows.Cast<DataGridViewRow>().ToList();
+            test.ForEach(x => x.SetValues(ckBox.Checked));
+
+            test = null;
+            //GC.Collect();
+
             this.dataGridViewCategoryKeys.EndEdit();
         }
 
@@ -261,17 +269,17 @@ namespace KeywordsSoft.Program
             }
         }
 
-        private void actionMenu_Click(object sender, EventArgs e)
-        {
-            bool enabled = false;
-            if (GetCheckedKeysIds().Any())
-            {
-                enabled = true;
-            }
-            actionMenu_moveItem.Enabled = enabled;
-            actionMenu_parseItem.Enabled = enabled;
-            actionMenu_deleteItem.Enabled = enabled;
-        }
+        //private void actionMenu_Click(object sender, EventArgs e)
+        //{
+        //    bool enabled = false;
+        //    if (GetCheckedKeysIds().Any())
+        //    {
+        //        enabled = true;
+        //    }
+        //    actionMenu_moveItem.Enabled = enabled;
+        //    actionMenu_parseItem.Enabled = enabled;
+        //    actionMenu_deleteItem.Enabled = enabled;
+        //}
 
         private void actionMenu_addKeys_Click(object sender, EventArgs e)
         {
@@ -316,33 +324,32 @@ namespace KeywordsSoft.Program
             {
                 parserForKeysParse = ParsersList.FirstOrDefault(p => p.name == item.Text && p.type == item.OwnerItem.Text);
 
-                progressBar1.Value = 0;
-                progressBar1.Visible = true;
+                var ids = GetCheckedKeysIds();
+                if (ids.Any())
+                {
+                    progressBar1.Value = 0;
+                    progressBar1.Visible = true;
 
-                this.Enabled = false;
-                backgroundWorker1.RunWorkerAsync();
+                    this.Enabled = false;
+                    backgroundWorker1.RunWorkerAsync(ids);
+                }
             }
         }
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             bool result = true;
-            var ids = GetCheckedKeysIds();
 
-            if (ids.Any())
-            {
-                List<string> values = new List<string>();
+            var ids = e.Argument as List<string>;
 
-                for (int i = 1; i <= ids.Count; i++)
+            for(int i = 1; i <= ids.Count; i++)
                 {
-                    values.AddRange(parserHelper.Parse(currentCategory, ids[i - 1], parserForKeysParse));
-                    backgroundWorker1.ReportProgress(90 * i / ids.Count);
-                }
-
-                parserHelper.AddParseData(currentCategory, ids, values, parserForKeysParse);
-                backgroundWorker1.ReportProgress(100);
+                result &= parserHelper.Parse(currentCategory, ids[i - 1], parserForKeysParse);
+                backgroundWorker1.ReportProgress(100 * i / ids.Count);
             }
 
+            ids.Clear();
+            ids = null;
             e.Result = result;
         }
 
@@ -364,6 +371,8 @@ namespace KeywordsSoft.Program
             System.Threading.Thread.Sleep(100);
             if ((bool)e.Result)
             {
+                
+
                 var confirmResult = MessageBox.Show($"Информация по выбранным ключам по типу {parserForKeysParse.type} спарсена парсером {parserForKeysParse.name}.", "Парсинг завершен", MessageBoxButtons.OK);
                 if (confirmResult == DialogResult.OK)
                 {
@@ -372,7 +381,9 @@ namespace KeywordsSoft.Program
                     ckBox.Checked = false;
                 }
             }
+
             this.Enabled = true;
+            GC.Collect();
         }
 
         private void cbParserSelect_SelectedValueChanged(object sender, EventArgs e)
@@ -398,6 +409,8 @@ namespace KeywordsSoft.Program
                 {
                     dgView.ApplySort(sortProperty, sortDirection);
                 }
+
+                ckBox.Checked = false;
             }
         }
 

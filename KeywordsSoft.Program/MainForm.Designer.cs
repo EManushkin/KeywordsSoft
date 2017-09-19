@@ -110,7 +110,6 @@
             this.actionMenu.Name = "actionMenu";
             this.actionMenu.Size = new System.Drawing.Size(87, 24);
             this.actionMenu.Text = "Действие";
-            this.actionMenu.DropDownOpening += new System.EventHandler(this.actionMenu_Click);
             // 
             // actionMenu_addKeys
             // 

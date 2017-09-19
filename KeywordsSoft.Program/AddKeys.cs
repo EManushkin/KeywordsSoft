@@ -59,14 +59,14 @@ namespace KeywordsSoft.Program
                 }
             }
 
-            if (new KeysHelper().Add(category, values))
+            if (new KeysHelper().Add(category, string.Join(",", values)))
             {
                 Validation($"Ключи добавлены", Color.Green);
 
                 btnAdd.Visible = false;
                 btnCancel.Visible = false;
 
-                Thread.Sleep(2000);
+                Thread.Sleep(1000);
 
                 Program.mainForm.LoadDataGridViewCategoryKeys();
 

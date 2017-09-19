@@ -136,6 +136,7 @@
             this.imagesTabDataGridView.RowHeadersVisible = false;
             this.imagesTabDataGridView.Size = new System.Drawing.Size(837, 415);
             this.imagesTabDataGridView.TabIndex = 1;
+            this.imagesTabDataGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.TabDataGridView_CellContentDoubleClick);
             // 
             // videosTab
             // 
@@ -166,6 +167,7 @@
             this.videosTabDataGridView.RowHeadersVisible = false;
             this.videosTabDataGridView.Size = new System.Drawing.Size(837, 415);
             this.videosTabDataGridView.TabIndex = 1;
+            this.videosTabDataGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.TabDataGridView_CellContentDoubleClick);
             // 
             // suggestsTab
             // 
@@ -196,6 +198,7 @@
             this.suggestsTabDataGridView.RowHeadersVisible = false;
             this.suggestsTabDataGridView.Size = new System.Drawing.Size(837, 415);
             this.suggestsTabDataGridView.TabIndex = 2;
+            this.suggestsTabDataGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.TabDataGridView_CellContentDoubleClick);
             // 
             // snippetsTab
             // 
@@ -226,6 +229,7 @@
             this.snippetsTabDataGridView.RowHeadersVisible = false;
             this.snippetsTabDataGridView.Size = new System.Drawing.Size(837, 415);
             this.snippetsTabDataGridView.TabIndex = 3;
+            this.snippetsTabDataGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.TabDataGridView_CellContentDoubleClick);
             // 
             // panel1
             // 

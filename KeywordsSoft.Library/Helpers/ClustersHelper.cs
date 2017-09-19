@@ -43,16 +43,16 @@ namespace KeywordsSoft.Library.Helpers
             return Database.Select<Keys_Clusters>(Path, dbName + "_clusters", filter);
         }
 
-        public bool DeleteKeysRelationships(string dbName, List<string> keysIds)
+        public bool DeleteKeysRelationships(string dbName, string keysIds)
         {
-            string ids = string.Join(",", keysIds);
-            return Database.Delete<Keys_Clusters>(Path, dbName + "_clusters", $"key_id in ({ids})");
+            //string ids = string.Join(",", keysIds);
+            return Database.Delete<Keys_Clusters>(Path, dbName + "_clusters", $"key_id in ({keysIds})");
         }
 
         public bool MoveToAnotherDatabase(string dbNameFrom, string dbNameTo, List<string> keysIds)
         {
             string ids = string.Join(",", keysIds);
-            return Database.MoveToAnotherDatabase<Keys_Clusters>(Path, dbNameFrom + "_clusters", dbNameTo + "_clusters", $"key_id in ({ids})");
+            return Database.MoveToAnotherDatabase<Keys_Clusters>(Path, dbNameFrom + "_clusters", dbNameTo + "_clusters", $"key_id in ({ids})", null);
         }
     }
 }

@@ -54,26 +54,29 @@ namespace KeywordsSoft.Library.Helpers
 
         public bool DeleteKeysWithRelationships(string dbName, List<string> keysIds)
         {
+            string ids = string.Join(",", keysIds);
             return
                 new KeysHelper().Delete(dbName, keysIds) &&
-                new TextsHelper().DeleteKeysRelationships(dbName, keysIds) &&
-                new ImagesHelper().DeleteKeysRelationships(dbName, keysIds) &&
-                new SnippetsHelper().DeleteKeysRelationships(dbName, keysIds) &&
-                new SuggestsHelper().DeleteKeysRelationships(dbName, keysIds) &&
-                new VideosHelper().DeleteKeysRelationships(dbName, keysIds) &&
-                new ClustersHelper().DeleteKeysRelationships(dbName, keysIds);
+                new TextsHelper().DeleteKeysRelationships(dbName, ids) &&
+                new ImagesHelper().DeleteKeysRelationships(dbName, ids) &&
+                new SnippetsHelper().DeleteKeysRelationships(dbName, ids) &&
+                new SuggestsHelper().DeleteKeysRelationships(dbName, ids) &&
+                new VideosHelper().DeleteKeysRelationships(dbName, ids) &&
+                new ClustersHelper().DeleteKeysRelationships(dbName, ids);
         }
 
         public bool MoveKeysToAnotherDatabase(string dbNameFrom, string dbNameTo, List<string> keysIds)
         {
+            string ids = string.Join(",", keysIds);
+            string maxId = new KeysHelper().MaxId(dbNameTo);
             return
-                new KeysHelper().MoveToAnotherDatabase(dbNameFrom, dbNameTo, keysIds) &&
-                new TextsHelper().MoveToAnotherDatabase(dbNameFrom, dbNameTo, keysIds) &&
-                new ImagesHelper().MoveToAnotherDatabase(dbNameFrom, dbNameTo, keysIds) &&
-                new SnippetsHelper().MoveToAnotherDatabase(dbNameFrom, dbNameTo, keysIds) &&
-                new SuggestsHelper().MoveToAnotherDatabase(dbNameFrom, dbNameTo, keysIds) &&
-                new VideosHelper().MoveToAnotherDatabase(dbNameFrom, dbNameTo, keysIds) &&
-                new ClustersHelper().DeleteKeysRelationships(dbNameFrom, keysIds);
+                new KeysHelper().MoveToAnotherDatabase(dbNameFrom, dbNameTo, ids, maxId) &&
+                new TextsHelper().MoveToAnotherDatabase(dbNameFrom, dbNameTo, ids, maxId) &&
+                new ImagesHelper().MoveToAnotherDatabase(dbNameFrom, dbNameTo, ids, maxId) &&
+                new SnippetsHelper().MoveToAnotherDatabase(dbNameFrom, dbNameTo, ids, maxId) &&
+                new SuggestsHelper().MoveToAnotherDatabase(dbNameFrom, dbNameTo, ids, maxId) &&
+                new VideosHelper().MoveToAnotherDatabase(dbNameFrom, dbNameTo, ids, maxId) &&
+                new ClustersHelper().DeleteKeysRelationships(dbNameFrom, ids);
         }
 
 

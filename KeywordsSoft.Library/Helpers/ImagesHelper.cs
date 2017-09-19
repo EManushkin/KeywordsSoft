@@ -41,7 +41,7 @@ namespace KeywordsSoft.Library.Helpers
             return Database.Select<Images>(Path, dbName + "_images", filter, selectExpression);
         }
 
-        public bool Add(string dbName, List<string> values)
+        public bool Add(string dbName, string values)
         {
             return Database.Add<Images>(Path, dbName + "_images", values);
         }
@@ -51,22 +51,22 @@ namespace KeywordsSoft.Library.Helpers
             return Database.AddWithClean<Images>(Path, dbName + "_images", values, $"parser_id = {parser.id} and key_id = {keyId}");
         }
 
-        public bool DeleteParserRelationships(string dbName, List<string> keysIds, Parsers parser)
+        public bool DeleteParserRelationships(string dbName, string keysIds, Parsers parser)
         {
-            string ids = string.Join(",", keysIds);
-            return Database.Delete<Images>(Path, dbName + "_images", $"parser_id = {parser.id} and key_id in ({ids})");
+            //string ids = string.Join(",", keysIds);
+            return Database.Delete<Images>(Path, dbName + "_images", $"parser_id = {parser.id} and key_id in ({keysIds})");
         }
 
-        public bool DeleteKeysRelationships(string dbName, List<string> keysIds)
+        public bool DeleteKeysRelationships(string dbName, string keysIds)
         {
-            string ids = string.Join(",", keysIds);
-            return Database.Delete<Images>(Path, dbName + "_images", $"key_id in ({ids})");
+            //string ids = string.Join(",", keysIds);
+            return Database.Delete<Images>(Path, dbName + "_images", $"key_id in ({keysIds})");
         }
 
-        public bool MoveToAnotherDatabase(string dbNameFrom, string dbNameTo, List<string> keysIds)
+        public bool MoveToAnotherDatabase(string dbNameFrom, string dbNameTo, string keysIds, string maxId)
         {
-            string ids = string.Join(",", keysIds);
-            return Database.MoveToAnotherDatabase<Images>(Path, dbNameFrom + "_images", dbNameTo + "_images", $"key_id in ({ids})");
+            //string ids = string.Join(",", keysIds);
+            return Database.MoveToAnotherDatabase<Images>(Path, dbNameFrom + "_images", dbNameTo + "_images", $"key_id in ({keysIds})", maxId);
         }
     }
 }

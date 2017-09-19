@@ -11,6 +11,7 @@ using System.IO;
 using System.Data;
 using System.Data.Common;
 using System.Reflection;
+using KeywordsSoft.Library.Entities;
 
 namespace KeywordsSoft.Library.Database
 {
@@ -152,7 +153,7 @@ namespace KeywordsSoft.Library.Database
             return list;
         }
 
-        public bool Add<T>(string path, string dbName, List<string> values) where T : class, new()
+        public bool Add<T>(string path, string dbName, string values) where T : class, new()
         {
             if (Directory.Exists(path) && File.Exists(path + dbName + ".db"))
             {
@@ -174,9 +175,9 @@ namespace KeywordsSoft.Library.Database
 
                             string types = string.Join(",", obj.GetType().GetProperties().Where(x => x.Name != "id").Select(x => x.Name));
 
-                            string val = string.Join(",", values);
+                            //string val = string.Join(",", values);
 
-                            sqLiteCommand.CommandText = $"INSERT INTO {typeof(T).Name} ({types}) VALUES {val};";
+                            sqLiteCommand.CommandText = $"INSERT INTO {typeof(T).Name} ({types}) VALUES {values};";
                             sqLiteCommand.ExecuteNonQuery();
                         }
 
@@ -266,7 +267,65 @@ namespace KeywordsSoft.Library.Database
             return true;
         }
 
-        public bool MoveToAnotherDatabase<T>(string path, string dbNameFrom, string dbNameTo, string filter) where T : class
+        public bool MoveToAnotherDatabase<T>(string path, string dbNameFrom, string dbNameTo, string filter, string maxId) where T : class
+        {
+            if (Directory.Exists(path) && File.Exists(path + dbNameFrom + ".db") && File.Exists(path + dbNameTo + ".db"))
+            {
+                try
+                {
+                    using (var connectionFrom = new SQLiteConnection(GetConnectionString(path + dbNameFrom)))
+                    {
+                        connectionFrom.Open();
+
+                        using (SQLiteCommand sqLiteCommand = new SQLiteCommand())
+                        {
+                            sqLiteCommand.CommandType = CommandType.Text;
+                            sqLiteCommand.CommandTimeout = 10;
+                            sqLiteCommand.Connection = connectionFrom;
+
+                            string command = $"ATTACH '{path + dbNameTo + ".db"}' AS dbTo";
+                            sqLiteCommand.CommandText = command;
+                            sqLiteCommand.ExecuteNonQuery();
+
+                            T obj = default(T);
+                            obj = Activator.CreateInstance<T>();
+
+                            string selectColumns = string.Empty;
+                            string insertColumns = string.Empty;
+
+                            if (typeof(T).Equals(typeof(Keys)))
+                            {
+                                insertColumns = string.Join(",", obj.GetType().GetProperties().Select(x => x.Name));
+                                selectColumns = insertColumns.Replace("id", $"id+{maxId} as id");
+                            }
+                            else
+                            {
+                                insertColumns = string.Join(",", obj.GetType().GetProperties().Where(x => x.Name != "id").Select(x => x.Name));
+                                selectColumns = insertColumns.Replace("key_id", $"key_id+{maxId} as key_id");
+                            }
+
+                            command = $"INSERT INTO dbTo.{typeof(T).Name} ({insertColumns}) SELECT {selectColumns} FROM {typeof(T).Name} WHERE {filter}";
+                            sqLiteCommand.CommandText = command;
+                            sqLiteCommand.ExecuteNonQuery();
+
+                            command = $"DELETE FROM {typeof(T).Name} WHERE {filter};";
+                            sqLiteCommand.CommandText = command + "VACUUM;";
+                            sqLiteCommand.ExecuteNonQuery();
+                        }
+
+                        connectionFrom.Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public bool MoveToAnotherDatabaseOld<T>(string path, string dbNameFrom, string dbNameTo, string filter) where T : class
         {
             DataTable result = null;
 
@@ -341,6 +400,37 @@ namespace KeywordsSoft.Library.Database
             }
 
             return true;
+        }
+
+        public string MaxId<T>(string path, string dbName) where T : class, new()
+        {
+            long count = 0;
+
+            if (Directory.Exists(path) && File.Exists(path + dbName + ".db"))
+            {
+                try
+                {
+                    using (var connection = new SQLiteConnection(GetConnectionString(path + dbName)))
+                    {
+                        connection.Open();
+
+                        using (SQLiteCommand sqLiteCommand = new SQLiteCommand())
+                        {
+                            sqLiteCommand.CommandType = CommandType.Text;
+                            sqLiteCommand.CommandTimeout = 10;
+                            sqLiteCommand.Connection = connection;
+
+                            sqLiteCommand.CommandText = $"SELECT MAX(id) FROM {typeof(T).Name};";
+                            count = (long)sqLiteCommand.ExecuteScalar();
+                        }
+                        connection.Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+            return count.ToString();
         }
     }
 }

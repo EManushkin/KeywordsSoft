@@ -53,11 +53,12 @@ namespace KeywordsSoft.Library.Helpers
             return Database.Select<Parsers>(Path, "parsers", filter);
         }
 
-        public List<string> Parse(string dbName, string keyId, Parsers parser)
+        public bool Parse(string dbName, string keyId, Parsers parser)
         {
             Random rnd = new Random((int)DateTime.Now.Ticks);
             List<string> values = new List<string>();
             int count = 0;
+            bool result = false;
             switch (parser.type)
             {
                 case Parsers.type_texts:
@@ -76,7 +77,8 @@ namespace KeywordsSoft.Library.Helpers
                             values.Add($"('{keyId}', 'parse_text_{DateTime.Now.Ticks + i}', 'parse_spin_{DateTime.Now.Ticks + i}', '{parser.id}', 'parse_url_www_{DateTime.Now.Ticks + i}')");
                         }
                     }
-                    return values; //textsHelper.AddParseData(dbName, keyId, values, parser);
+                    result = textsHelper.AddParseData(dbName, keyId, values, parser);
+                    break;
                 case Parsers.type_images:
                     var imagesHelper = new ImagesHelper();
                     //TODO parse algorithm
@@ -85,7 +87,8 @@ namespace KeywordsSoft.Library.Helpers
                     {
                         values.Add($"('{keyId}', 'parse_text_{DateTime.Now.Ticks + i}', '{parser.id}')");
                     }
-                    return values; //imagesHelper.AddParseData(dbName, keyId, values, parser);
+                    result = imagesHelper.AddParseData(dbName, keyId, values, parser);
+                    break;
                 case Parsers.type_videos:
                     var videosHelper = new VideosHelper();
                     //TODO parse algorithm
@@ -94,7 +97,8 @@ namespace KeywordsSoft.Library.Helpers
                     {
                         values.Add($"('{keyId}', 'parse_text_{DateTime.Now.Ticks + i}', '{parser.id}')");
                     }
-                    return values; //videosHelper.AddParseData(dbName, keyId, values, parser);
+                    result = videosHelper.AddParseData(dbName, keyId, values, parser);
+                    break;
                 case Parsers.type_snippets:
                     var snippetsHelper = new SnippetsHelper();
                     //TODO parse algorithm
@@ -103,7 +107,8 @@ namespace KeywordsSoft.Library.Helpers
                     {
                         values.Add($"('{keyId}', 'parse_text_{DateTime.Now.Ticks + i}', '{parser.id}')");
                     }
-                    return values; //snippetsHelper.AddParseData(dbName, keyId, values, parser);
+                    result = snippetsHelper.AddParseData(dbName, keyId, values, parser);
+                    break;
                 case Parsers.type_suggests:
                     var suggestsHelper = new SuggestsHelper();
                     //TODO parse algorithm
@@ -112,35 +117,44 @@ namespace KeywordsSoft.Library.Helpers
                     {
                         values.Add($"('{keyId}', 'parse_text_{DateTime.Now.Ticks + i}', '{parser.id}')");
                     }
-                    return values; //suggestsHelper.AddParseData(dbName, keyId, values, parser);
+                    result = suggestsHelper.AddParseData(dbName, keyId, values, parser);
+                    break;
                 default:
-                    return new List<string>(); //false
+                    result = false;
+                    break;
             }
+
+            values.Clear();
+            values = null;
+            GC.Collect();
+            return result;
         }
         public bool AddParseData(string dbName, List<string> keysIds, List<string> values, Parsers parser)
         {
+            string ids = string.Join(",", keysIds);
+            string value = string.Join(",", values);
             switch (parser.type)
             {
                 case Parsers.type_texts:
                     var textsHelper = new TextsHelper();
-                    textsHelper.DeleteParserRelationships(dbName, keysIds, parser);
-                    return textsHelper.Add(dbName, values);
+                    textsHelper.DeleteParserRelationships(dbName, ids, parser);
+                    return textsHelper.Add(dbName, value);
                 case Parsers.type_images:
                     var imagesHelper = new ImagesHelper();
-                    imagesHelper.DeleteParserRelationships(dbName, keysIds, parser);
-                    return imagesHelper.Add(dbName, values);
+                    imagesHelper.DeleteParserRelationships(dbName, ids, parser);
+                    return imagesHelper.Add(dbName, value);
                 case Parsers.type_videos:
                     var videosHelper = new VideosHelper();
-                    videosHelper.DeleteParserRelationships(dbName, keysIds, parser);
-                    return videosHelper.Add(dbName, values);
+                    videosHelper.DeleteParserRelationships(dbName, ids, parser);
+                    return videosHelper.Add(dbName, value);
                 case Parsers.type_snippets:
                     var snippetsHelper = new SnippetsHelper();
-                    snippetsHelper.DeleteParserRelationships(dbName, keysIds, parser);
-                    return snippetsHelper.Add(dbName, values);
+                    snippetsHelper.DeleteParserRelationships(dbName, ids, parser);
+                    return snippetsHelper.Add(dbName, value);
                 case Parsers.type_suggests:
                     var suggestsHelper = new SuggestsHelper();
-                    suggestsHelper.DeleteParserRelationships(dbName, keysIds, parser);
-                    return suggestsHelper.Add(dbName, values);
+                    suggestsHelper.DeleteParserRelationships(dbName, ids, parser);
+                    return suggestsHelper.Add(dbName, value);
                 default:
                     return false;
             }

@@ -38,9 +38,9 @@ namespace KeywordsSoft.Library.Helpers
             Database.Delete(Path + dbName);
         }
 
-        public bool Add(string dbName, List<string> entity)
+        public bool Add(string dbName, string values)
         {
-            return Database.Add<Keys>(Path, dbName, entity);
+            return Database.Add<Keys>(Path, dbName, values);
         }
 
         public List<Keys> Select(string dbName, string filter = null)
@@ -54,10 +54,15 @@ namespace KeywordsSoft.Library.Helpers
             return Database.Delete<Keys>(Path, dbName, $"id in ({ids})");
         }
 
-        public bool MoveToAnotherDatabase(string dbNameFrom, string dbNameTo, List<string> keysIds)
+        public bool MoveToAnotherDatabase(string dbNameFrom, string dbNameTo, string keysIds, string maxId)
         {
-            string ids = string.Join(",", keysIds);
-            return Database.MoveToAnotherDatabase<Keys>(Path, dbNameFrom, dbNameTo, $"id in ({ids})");
+            //string ids = string.Join(",", keysIds);
+            return Database.MoveToAnotherDatabase<Keys>(Path, dbNameFrom, dbNameTo, $"id in ({keysIds})", maxId);
+        }
+
+        public string MaxId(string dbName)
+        {
+            return Database.MaxId<Keys>(Path, dbName);
         }
     }
 }

@@ -71,7 +71,7 @@ namespace KeywordsSoft.Program
                 btnAdd.Visible = false;
                 btnCancel.Visible = false;
 
-                Thread.Sleep(2000);
+                Thread.Sleep(1000);
 
                 Program.mainForm.currentCategory = $"{language}_{ tbCategoryName.Text}";
 
