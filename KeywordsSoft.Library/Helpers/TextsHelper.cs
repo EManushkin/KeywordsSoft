@@ -48,6 +48,11 @@ namespace KeywordsSoft.Library.Helpers
             return Database.Add<Texts>(Path, dbName + "_texts", values);
         }
 
+        public bool AddParseData(string dbName, string keyId, List<string> values, Parsers parser)
+        {
+            return Database.AddWithClean<Texts>(Path, dbName + "_texts", values, $"parser_id = {parser.id} and key_id = {keyId}");
+        }
+
         public bool DeleteParserRelationships(string dbName, List<string> keysIds, Parsers parser)
         {
             string ids = string.Join(",", keysIds);

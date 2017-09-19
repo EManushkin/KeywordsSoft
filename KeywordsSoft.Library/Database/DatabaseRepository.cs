@@ -77,7 +77,7 @@ namespace KeywordsSoft.Library.Database
             }
         }
 
-        public string [] GetСategories(string path)
+        public string[] GetСategories(string path)
         {
             if (Directory.Exists(path))
             {
@@ -97,8 +97,9 @@ namespace KeywordsSoft.Library.Database
                 {
                     using (var connection = new SQLiteConnection(GetConnectionString(path + dbName)))
                     {
-                        
+
                         T obj = default(T);
+                        
 
                         connection.Open();
 
@@ -118,6 +119,7 @@ namespace KeywordsSoft.Library.Database
                             while (reader.Read())
                             {
                                 obj = Activator.CreateInstance<T>();
+
                                 foreach (PropertyInfo prop in obj.GetType().GetProperties())
                                 {
                                     try
@@ -175,6 +177,46 @@ namespace KeywordsSoft.Library.Database
                             string val = string.Join(",", values);
 
                             sqLiteCommand.CommandText = $"INSERT INTO {typeof(T).Name} ({types}) VALUES {val};";
+                            sqLiteCommand.ExecuteNonQuery();
+                        }
+
+                        connection.Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public bool AddWithClean<T>(string path, string dbName, List<string> values, string cleanFilter) where T : class, new()
+        {
+            if (Directory.Exists(path) && File.Exists(path + dbName + ".db"))
+            {
+                try
+                {
+                    using (var connection = new SQLiteConnection(GetConnectionString(path + dbName)))
+                    {
+                        T obj = default(T);
+
+                        connection.Open();
+
+                        using (SQLiteCommand sqLiteCommand = new SQLiteCommand())
+                        {
+                            sqLiteCommand.CommandType = CommandType.Text;
+                            sqLiteCommand.CommandTimeout = 10;
+                            sqLiteCommand.Connection = connection;
+
+                            obj = Activator.CreateInstance<T>();
+
+                            string types = string.Join(",", obj.GetType().GetProperties().Where(x => x.Name != "id").Select(x => x.Name));
+
+                            string val = string.Join(",", values);
+
+                            sqLiteCommand.CommandText = $"DELETE FROM {typeof(T).Name} WHERE {cleanFilter}; VACUUM;" +
+                                                        $"INSERT INTO {typeof(T).Name} ({types}) VALUES {val};";
                             sqLiteCommand.ExecuteNonQuery();
                         }
 

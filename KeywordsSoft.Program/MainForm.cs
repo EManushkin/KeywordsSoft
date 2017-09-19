@@ -20,12 +20,14 @@ namespace KeywordsSoft.Program
     {
         public string currentCategory { get; set; }
         public string previousCategory { get; set; }
+        public Parsers parserForKeysParse { get; set; }
 
         public List<MainTable> MainTableList { get; set; }
         public List<Parsers> ParsersList { get; set; }
 
         public DatabaseHelper helper = new DatabaseHelper();
-             
+        public ParsersHelper parserHelper;
+
         public BindingListView<MainTable> dgView { get; set; }
 
         private CheckBox ckBox { get; set; }
@@ -45,7 +47,8 @@ namespace KeywordsSoft.Program
         {
             InitializeComponent();
 
-            ParsersList = new ParsersHelper().Select();
+            parserHelper = new ParsersHelper();
+            ParsersList = parserHelper.Select();
 
             LoadMenu();
             LoadMenuParsers();
@@ -188,9 +191,9 @@ namespace KeywordsSoft.Program
 
         public void CategoryChangeReset(bool state)
         {
-            actionMenu_moveItem.Enabled = state;
-            actionMenu_parseItem.Enabled = state;
-            actionMenu_deleteItem.Enabled = state;
+            //actionMenu_moveItem.Enabled = state;
+            //actionMenu_parseItem.Enabled = state;
+            //actionMenu_deleteItem.Enabled = state;
             cbParserSelect.Enabled = state;
 
             cbFilterField.Enabled = state;
@@ -209,6 +212,9 @@ namespace KeywordsSoft.Program
             btnFilter.Enabled = false;
 
             ckBox.Checked = false;
+            progressBar1.Visible = state;
+            progressBar1.Value = 0;
+            labelPercent.Text = string.Empty;
         }
 
         private void ckBox_CheckedChanged(object sender, EventArgs e)
@@ -255,6 +261,18 @@ namespace KeywordsSoft.Program
             }
         }
 
+        private void actionMenu_Click(object sender, EventArgs e)
+        {
+            bool enabled = false;
+            if (GetCheckedKeysIds().Any())
+            {
+                enabled = true;
+            }
+            actionMenu_moveItem.Enabled = enabled;
+            actionMenu_parseItem.Enabled = enabled;
+            actionMenu_deleteItem.Enabled = enabled;
+        }
+
         private void actionMenu_addKeys_Click(object sender, EventArgs e)
         {
             var formAddKeys = new AddKeys();
@@ -265,7 +283,7 @@ namespace KeywordsSoft.Program
         {
             var ids = GetCheckedKeysIds();
 
-            if (helper.DeleteKeysWithRelationships(currentCategory, ids))
+            if (ids.Any() && helper.DeleteKeysWithRelationships(currentCategory, ids))
             {
                 LoadDataGridViewCategoryKeys();
                 ckBox.Checked = false;
@@ -279,7 +297,7 @@ namespace KeywordsSoft.Program
             var moveTo = item.Text;
             var ids = GetCheckedKeysIds();
 
-            if (helper.MoveKeysToAnotherDatabase(currentCategory, moveTo, ids))
+            if (ids.Any() && helper.MoveKeysToAnotherDatabase(currentCategory, moveTo, ids))
             {
                 this.actionMenu_moveItem.DropDownItems[$"actionMenu_moveItem_{currentCategory}"].Enabled = true;
                 currentCategory = moveTo;
@@ -296,20 +314,65 @@ namespace KeywordsSoft.Program
 
             if (item != null && item.Text != "All...")
             {
-                var parser = ParsersList.FirstOrDefault(p => p.name == item.Text && p.type == item.OwnerItem.Text);
-                var ids = GetCheckedKeysIds();
+                parserForKeysParse = ParsersList.FirstOrDefault(p => p.name == item.Text && p.type == item.OwnerItem.Text);
 
-                if (new ParsersHelper().Parse(currentCategory, ids, parser))
+                progressBar1.Value = 0;
+                progressBar1.Visible = true;
+
+                this.Enabled = false;
+                backgroundWorker1.RunWorkerAsync();
+            }
+        }
+
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            bool result = true;
+            var ids = GetCheckedKeysIds();
+
+            if (ids.Any())
+            {
+                List<string> values = new List<string>();
+
+                for (int i = 1; i <= ids.Count; i++)
                 {
-                    var confirmResult = MessageBox.Show($"Информация по выбранным ключам по типу {parser.type} спарсена парсером {parser.name}.", "Парсинг завершен", MessageBoxButtons.OK);
-                    if (confirmResult == DialogResult.OK)
-                    {
-                        LoadDataGridViewCategoryKeys();
-                        CategoryChangeReset(true);
-                        ckBox.Checked = false;
-                    }
+                    values.AddRange(parserHelper.Parse(currentCategory, ids[i - 1], parserForKeysParse));
+                    backgroundWorker1.ReportProgress(90 * i / ids.Count);
+                }
+
+                parserHelper.AddParseData(currentCategory, ids, values, parserForKeysParse);
+                backgroundWorker1.ReportProgress(100);
+            }
+
+            e.Result = result;
+        }
+
+        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            progressBar1.Value = e.ProgressPercentage;
+            labelPercent.Text = e.ProgressPercentage + "%";
+            if (e.ProgressPercentage == 100)
+            {
+                progressBar1.Maximum = 101;
+                progressBar1.Value = 101;
+                progressBar1.Maximum = 100;
+                progressBar1.Value = 100;
+            }
+        }
+
+        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            System.Threading.Thread.Sleep(100);
+            if ((bool)e.Result)
+            {
+                var confirmResult = MessageBox.Show($"Информация по выбранным ключам по типу {parserForKeysParse.type} спарсена парсером {parserForKeysParse.name}.", "Парсинг завершен", MessageBoxButtons.OK);
+                if (confirmResult == DialogResult.OK)
+                {
+                    LoadDataGridViewCategoryKeys();
+                    CategoryChangeReset(true);
+                    ckBox.Checked = false;
                 }
             }
+            this.Enabled = true;
         }
 
         private void cbParserSelect_SelectedValueChanged(object sender, EventArgs e)
@@ -392,16 +455,16 @@ namespace KeywordsSoft.Program
                     Predicate<MainTable> pred = func.ExpressionToFunc().Invoke;
                     dgView.ApplyFilter(pred);
                     break;
-                //default:
-                //    dgView.RemoveFilter();
-                //    break;
+                    //default:
+                    //    dgView.RemoveFilter();
+                    //    break;
             }
 
             ShowRowsCount(dgView.Count);
         }
 
         private void btnFilterRemove_Click(object sender, EventArgs e)
-        {           
+        {
             dgView.RemoveFilter();
             ShowRowsCount(dgView.Count);
 
@@ -427,7 +490,5 @@ namespace KeywordsSoft.Program
                 }
             }
         }
-
-        
     }
 }

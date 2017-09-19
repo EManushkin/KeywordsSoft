@@ -46,6 +46,11 @@ namespace KeywordsSoft.Library.Helpers
             return Database.Add<Snippets>(Path, dbName + "_snippets", values);
         }
 
+        public bool AddParseData(string dbName, string keyId, List<string> values, Parsers parser)
+        {
+            return Database.AddWithClean<Snippets>(Path, dbName + "_snippets", values, $"parser_id = {parser.id} and key_id = {keyId}");
+        }
+
         public bool DeleteParserRelationships(string dbName, List<string> keysIds, Parsers parser)
         {
             string ids = string.Join(",", keysIds);

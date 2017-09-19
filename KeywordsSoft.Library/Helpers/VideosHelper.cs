@@ -46,6 +46,11 @@ namespace KeywordsSoft.Library.Helpers
             return Database.Add<Videos>(Path, dbName + "_videos", values);
         }
 
+        public bool AddParseData(string dbName, string keyId, List<string> values, Parsers parser)
+        {
+            return Database.AddWithClean<Videos>(Path, dbName + "_videos", values, $"parser_id = {parser.id} and key_id = {keyId}");
+        }
+
         public bool DeleteParserRelationships(string dbName, List<string> keysIds, Parsers parser)
         {
             string ids = string.Join(",", keysIds);

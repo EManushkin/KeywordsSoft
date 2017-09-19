@@ -46,6 +46,11 @@ namespace KeywordsSoft.Library.Helpers
             return Database.Add<Images>(Path, dbName + "_images", values);
         }
 
+        public bool AddParseData(string dbName, string keyId, List<string> values, Parsers parser)
+        {
+            return Database.AddWithClean<Images>(Path, dbName + "_images", values, $"parser_id = {parser.id} and key_id = {keyId}");
+        }
+
         public bool DeleteParserRelationships(string dbName, List<string> keysIds, Parsers parser)
         {
             string ids = string.Join(",", keysIds);

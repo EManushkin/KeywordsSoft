@@ -33,8 +33,19 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.categoryMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.actionMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionMenu_addKeys = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.actionMenu_parseItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionMenu_parseItem_texts = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionMenu_parseItem_images = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionMenu_parseItem_videos = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionMenu_parseItem_suggests = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionMenu_parseItem_snippets = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.actionMenu_parseItem_all = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionMenu_moveItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.actionMenu_deleteItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelCategory = new System.Windows.Forms.Label();
             this.labelCategorySelected = new System.Windows.Forms.Label();
             this.labelParser = new System.Windows.Forms.Label();
@@ -58,18 +69,10 @@
             this.btnFilterRemove = new System.Windows.Forms.Button();
             this.btnFilter = new System.Windows.Forms.Button();
             this.btnDeleteCategory = new System.Windows.Forms.Button();
-            this.actionMenu_addKeys = new System.Windows.Forms.ToolStripMenuItem();
-            this.actionMenu_parseItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.actionMenu_parseItem_texts = new System.Windows.Forms.ToolStripMenuItem();
-            this.actionMenu_parseItem_images = new System.Windows.Forms.ToolStripMenuItem();
-            this.actionMenu_parseItem_videos = new System.Windows.Forms.ToolStripMenuItem();
-            this.actionMenu_parseItem_suggests = new System.Windows.Forms.ToolStripMenuItem();
-            this.actionMenu_parseItem_snippets = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.actionMenu_parseItem_all = new System.Windows.Forms.ToolStripMenuItem();
-            this.actionMenu_moveItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.actionMenu_deleteItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelRowsCount = new System.Windows.Forms.Label();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.labelPercent = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCategoryKeys)).BeginInit();
             this.SuspendLayout();
@@ -107,16 +110,99 @@
             this.actionMenu.Name = "actionMenu";
             this.actionMenu.Size = new System.Drawing.Size(87, 24);
             this.actionMenu.Text = "Действие";
+            this.actionMenu.DropDownOpening += new System.EventHandler(this.actionMenu_Click);
+            // 
+            // actionMenu_addKeys
+            // 
+            this.actionMenu_addKeys.Image = global::KeywordsSoft.Program.Properties.Resources.add_key_icon;
+            this.actionMenu_addKeys.Name = "actionMenu_addKeys";
+            this.actionMenu_addKeys.Size = new System.Drawing.Size(238, 24);
+            this.actionMenu_addKeys.Text = "Добавить ключи";
+            this.actionMenu_addKeys.Click += new System.EventHandler(this.actionMenu_addKeys_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(235, 6);
             // 
+            // actionMenu_parseItem
+            // 
+            this.actionMenu_parseItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.actionMenu_parseItem_texts,
+            this.actionMenu_parseItem_images,
+            this.actionMenu_parseItem_videos,
+            this.actionMenu_parseItem_suggests,
+            this.actionMenu_parseItem_snippets,
+            this.toolStripSeparator2,
+            this.actionMenu_parseItem_all});
+            this.actionMenu_parseItem.Enabled = false;
+            this.actionMenu_parseItem.Image = global::KeywordsSoft.Program.Properties.Resources.parse_icon;
+            this.actionMenu_parseItem.Name = "actionMenu_parseItem";
+            this.actionMenu_parseItem.Size = new System.Drawing.Size(238, 24);
+            this.actionMenu_parseItem.Text = "Спарсить информацию";
+            // 
+            // actionMenu_parseItem_texts
+            // 
+            this.actionMenu_parseItem_texts.Name = "actionMenu_parseItem_texts";
+            this.actionMenu_parseItem_texts.Size = new System.Drawing.Size(134, 24);
+            this.actionMenu_parseItem_texts.Text = "texts";
+            // 
+            // actionMenu_parseItem_images
+            // 
+            this.actionMenu_parseItem_images.Name = "actionMenu_parseItem_images";
+            this.actionMenu_parseItem_images.Size = new System.Drawing.Size(134, 24);
+            this.actionMenu_parseItem_images.Text = "images";
+            // 
+            // actionMenu_parseItem_videos
+            // 
+            this.actionMenu_parseItem_videos.Name = "actionMenu_parseItem_videos";
+            this.actionMenu_parseItem_videos.Size = new System.Drawing.Size(134, 24);
+            this.actionMenu_parseItem_videos.Text = "videos";
+            // 
+            // actionMenu_parseItem_suggests
+            // 
+            this.actionMenu_parseItem_suggests.Name = "actionMenu_parseItem_suggests";
+            this.actionMenu_parseItem_suggests.Size = new System.Drawing.Size(134, 24);
+            this.actionMenu_parseItem_suggests.Text = "suggests";
+            // 
+            // actionMenu_parseItem_snippets
+            // 
+            this.actionMenu_parseItem_snippets.Name = "actionMenu_parseItem_snippets";
+            this.actionMenu_parseItem_snippets.Size = new System.Drawing.Size(134, 24);
+            this.actionMenu_parseItem_snippets.Text = "snippets";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(131, 6);
+            // 
+            // actionMenu_parseItem_all
+            // 
+            this.actionMenu_parseItem_all.Name = "actionMenu_parseItem_all";
+            this.actionMenu_parseItem_all.Size = new System.Drawing.Size(134, 24);
+            this.actionMenu_parseItem_all.Text = "All...";
+            // 
+            // actionMenu_moveItem
+            // 
+            this.actionMenu_moveItem.Enabled = false;
+            this.actionMenu_moveItem.Image = global::KeywordsSoft.Program.Properties.Resources.move_icon;
+            this.actionMenu_moveItem.Name = "actionMenu_moveItem";
+            this.actionMenu_moveItem.Size = new System.Drawing.Size(238, 24);
+            this.actionMenu_moveItem.Text = "Перенести";
+            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(235, 6);
+            // 
+            // actionMenu_deleteItem
+            // 
+            this.actionMenu_deleteItem.Enabled = false;
+            this.actionMenu_deleteItem.Image = global::KeywordsSoft.Program.Properties.Resources.delete_icon;
+            this.actionMenu_deleteItem.Name = "actionMenu_deleteItem";
+            this.actionMenu_deleteItem.Size = new System.Drawing.Size(238, 24);
+            this.actionMenu_deleteItem.Text = "Удалить ключи";
+            this.actionMenu_deleteItem.Click += new System.EventHandler(this.actionMenu_deleteItem_Click);
             // 
             // labelCategory
             // 
@@ -403,96 +489,42 @@
             this.btnDeleteCategory.Visible = false;
             this.btnDeleteCategory.Click += new System.EventHandler(this.btnDeleteCategory_Click);
             // 
-            // actionMenu_addKeys
-            // 
-            this.actionMenu_addKeys.Image = global::KeywordsSoft.Program.Properties.Resources.add_key_icon;
-            this.actionMenu_addKeys.Name = "actionMenu_addKeys";
-            this.actionMenu_addKeys.Size = new System.Drawing.Size(238, 24);
-            this.actionMenu_addKeys.Text = "Добавить ключи";
-            this.actionMenu_addKeys.Click += new System.EventHandler(this.actionMenu_addKeys_Click);
-            // 
-            // actionMenu_parseItem
-            // 
-            this.actionMenu_parseItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.actionMenu_parseItem_texts,
-            this.actionMenu_parseItem_images,
-            this.actionMenu_parseItem_videos,
-            this.actionMenu_parseItem_suggests,
-            this.actionMenu_parseItem_snippets,
-            this.toolStripSeparator2,
-            this.actionMenu_parseItem_all});
-            this.actionMenu_parseItem.Enabled = false;
-            this.actionMenu_parseItem.Image = global::KeywordsSoft.Program.Properties.Resources.parse_icon;
-            this.actionMenu_parseItem.Name = "actionMenu_parseItem";
-            this.actionMenu_parseItem.Size = new System.Drawing.Size(238, 24);
-            this.actionMenu_parseItem.Text = "Спарсить информацию";
-            // 
-            // actionMenu_parseItem_texts
-            // 
-            this.actionMenu_parseItem_texts.Name = "actionMenu_parseItem_texts";
-            this.actionMenu_parseItem_texts.Size = new System.Drawing.Size(134, 24);
-            this.actionMenu_parseItem_texts.Text = "texts";
-            // 
-            // actionMenu_parseItem_images
-            // 
-            this.actionMenu_parseItem_images.Name = "actionMenu_parseItem_images";
-            this.actionMenu_parseItem_images.Size = new System.Drawing.Size(134, 24);
-            this.actionMenu_parseItem_images.Text = "images";
-            // 
-            // actionMenu_parseItem_videos
-            // 
-            this.actionMenu_parseItem_videos.Name = "actionMenu_parseItem_videos";
-            this.actionMenu_parseItem_videos.Size = new System.Drawing.Size(134, 24);
-            this.actionMenu_parseItem_videos.Text = "videos";
-            // 
-            // actionMenu_parseItem_suggests
-            // 
-            this.actionMenu_parseItem_suggests.Name = "actionMenu_parseItem_suggests";
-            this.actionMenu_parseItem_suggests.Size = new System.Drawing.Size(134, 24);
-            this.actionMenu_parseItem_suggests.Text = "suggests";
-            // 
-            // actionMenu_parseItem_snippets
-            // 
-            this.actionMenu_parseItem_snippets.Name = "actionMenu_parseItem_snippets";
-            this.actionMenu_parseItem_snippets.Size = new System.Drawing.Size(134, 24);
-            this.actionMenu_parseItem_snippets.Text = "snippets";
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(131, 6);
-            // 
-            // actionMenu_parseItem_all
-            // 
-            this.actionMenu_parseItem_all.Name = "actionMenu_parseItem_all";
-            this.actionMenu_parseItem_all.Size = new System.Drawing.Size(134, 24);
-            this.actionMenu_parseItem_all.Text = "All...";
-            // 
-            // actionMenu_moveItem
-            // 
-            this.actionMenu_moveItem.Enabled = false;
-            this.actionMenu_moveItem.Image = global::KeywordsSoft.Program.Properties.Resources.move_icon;
-            this.actionMenu_moveItem.Name = "actionMenu_moveItem";
-            this.actionMenu_moveItem.Size = new System.Drawing.Size(238, 24);
-            this.actionMenu_moveItem.Text = "Перенести";
-            // 
-            // actionMenu_deleteItem
-            // 
-            this.actionMenu_deleteItem.Enabled = false;
-            this.actionMenu_deleteItem.Image = global::KeywordsSoft.Program.Properties.Resources.delete_icon;
-            this.actionMenu_deleteItem.Name = "actionMenu_deleteItem";
-            this.actionMenu_deleteItem.Size = new System.Drawing.Size(238, 24);
-            this.actionMenu_deleteItem.Text = "Удалить ключи";
-            this.actionMenu_deleteItem.Click += new System.EventHandler(this.actionMenu_deleteItem_Click);
-            // 
             // labelRowsCount
             // 
             this.labelRowsCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelRowsCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labelRowsCount.Location = new System.Drawing.Point(715, 544);
+            this.labelRowsCount.Location = new System.Drawing.Point(715, 541);
             this.labelRowsCount.Name = "labelRowsCount";
             this.labelRowsCount.Size = new System.Drawing.Size(200, 20);
             this.labelRowsCount.TabIndex = 12;
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBar1.Location = new System.Drawing.Point(15, 541);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(624, 23);
+            this.progressBar1.Step = 1;
+            this.progressBar1.TabIndex = 13;
+            this.progressBar1.Visible = false;
+            // 
+            // backgroundWorker1
+            // 
+            this.backgroundWorker1.WorkerReportsProgress = true;
+            this.backgroundWorker1.WorkerSupportsCancellation = true;
+            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
+            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
+            // 
+            // labelPercent
+            // 
+            this.labelPercent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelPercent.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labelPercent.Location = new System.Drawing.Point(645, 541);
+            this.labelPercent.Name = "labelPercent";
+            this.labelPercent.Size = new System.Drawing.Size(53, 20);
+            this.labelPercent.TabIndex = 14;
             // 
             // MainForm
             // 
@@ -500,6 +532,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(938, 578);
+            this.Controls.Add(this.labelPercent);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.labelRowsCount);
             this.Controls.Add(this.btnFilterRemove);
             this.Controls.Add(this.btnFilter);
@@ -569,6 +603,9 @@
         private System.Windows.Forms.Button btnFilter;
         private System.Windows.Forms.Button btnFilterRemove;
         private System.Windows.Forms.Label labelRowsCount;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.Label labelPercent;
     }
 }
 
