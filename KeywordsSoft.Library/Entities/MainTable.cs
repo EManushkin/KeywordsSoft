@@ -28,4 +28,13 @@ namespace KeywordsSoft.Library.Entities
 
         public int videos { get; set; }
     }
+
+    public class DbNamePath
+    {
+        public string Name { get; set; }
+
+        public string Path { get; set; }
+
+        public string Class { get; set; }
+    }
 }

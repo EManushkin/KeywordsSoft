@@ -88,6 +88,37 @@ namespace KeywordsSoft.Library.Database
             return Directory.GetFiles(path, "*.db").Select(file => Path.GetFileNameWithoutExtension(file)).OrderBy(file => file).ToArray();
         }
 
+        public bool Vacuum<T>(string path, string dbName) where T : class, new()
+        {
+            if (Directory.Exists(path) && File.Exists(path + dbName + ".db"))
+            {
+                try
+                {
+                    using (var connection = new SQLiteConnection(GetConnectionString(path + dbName)))
+                    {
+                        connection.Open();
+
+                        using (SQLiteCommand sqLiteCommand = new SQLiteCommand())
+                        {
+                            sqLiteCommand.CommandType = CommandType.Text;
+                            sqLiteCommand.CommandTimeout = 10;
+                            sqLiteCommand.Connection = connection;
+
+                            sqLiteCommand.CommandText = $"VACUUM;";
+                            sqLiteCommand.ExecuteNonQuery();
+                        }
+
+                        connection.Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public List<T> Select<T>(string path, string dbName, string filter = null, string selectExpression = "*") where T : class, new()
         {
             List<T> list = new List<T>();
@@ -153,6 +184,104 @@ namespace KeywordsSoft.Library.Database
             return list;
         }
 
+        public List<MainTable> SelectMainTable(List<DbNamePath> Path_and_dbName, string filter = null)
+        {
+            List<MainTable> result = new List<MainTable>();
+
+            bool isExists = true;
+
+            foreach (var db in Path_and_dbName)
+            {
+                isExists &= Directory.Exists(db.Path) && File.Exists(db.Path + db.Name + ".db");
+            }
+
+            if (isExists)
+            {
+                try
+                {
+                    using (var connection = new SQLiteConnection(GetConnectionString(Path_and_dbName[0].Path + Path_and_dbName[0].Name)))
+                    {
+                        connection.Open();
+
+                        using (SQLiteCommand sqLiteCommand = new SQLiteCommand())
+                        {
+                            sqLiteCommand.CommandType = CommandType.Text;
+                            sqLiteCommand.CommandTimeout = 10;
+                            sqLiteCommand.Connection = connection;
+                            string command = string.Empty;
+                            
+                            for (int i = 1; i < Path_and_dbName.Count; i++)
+                            {
+                                command = $"ATTACH '{Path_and_dbName[i].Path + Path_and_dbName[i].Name + ".db"}' AS db{Path_and_dbName[i].Class};";
+                                sqLiteCommand.CommandText = command;
+                                sqLiteCommand.ExecuteNonQuery();
+                            }
+
+                            command = $@"SELECT id, name, good, text, spin, url, image, snippet, suggest, video, cluster
+                                         FROM Keys as k
+                                         LEFT JOIN
+                                            (SELECT key_id, CAST(COUNT(NULLIF(text, '' )) as TEXT) as text, CAST(COUNT(NULLIF(spin, '')) as TEXT) as spin, CAST(COUNT(NULLIF(url, '')) as TEXT) as url
+                                            FROM 'Texts' { (filter == null ? "group by key_id" : $"WHERE {filter} group by key_id") }) as t
+                                         ON k.id = t.key_id
+                                         LEFT JOIN
+                                            (SELECT key_id, CAST(COUNT(NULLIF(text, '' )) as TEXT) as image
+                                            FROM 'Images' { (filter == null ? "group by key_id" : $"WHERE {filter} group by key_id") }) as i
+                                         ON k.id = i.key_id
+                                         LEFT JOIN
+                                            (SELECT key_id, CAST(COUNT(NULLIF(text, '' )) as TEXT) as snippet
+                                            FROM 'Snippets' { (filter == null ? "group by key_id" : $"WHERE {filter} group by key_id") }) as sn
+                                         ON k.id = sn.key_id
+                                         LEFT JOIN
+                                            (SELECT key_id, CAST(COUNT(NULLIF(text, '' )) as TEXT) as suggest
+                                            FROM 'Suggests' { (filter == null ? "group by key_id" : $"WHERE {filter} group by key_id") }) as sg
+                                         ON k.id = sg.key_id
+                                         LEFT JOIN
+                                            (SELECT key_id, CAST(COUNT(NULLIF(text, '' )) as TEXT) as video
+                                            FROM 'Videos' { (filter == null ? "group by key_id" : $"WHERE {filter} group by key_id") }) as v
+                                         ON k.id = v.key_id
+                                         LEFT JOIN
+                                            (SELECT key_id, GROUP_CONCAT(cluster_id) as cluster
+                                            FROM (SELECT key_id, cluster_id FROM 'keys_clusters' ORDER BY key_id, cluster_id) group by key_id) as c
+                                         ON k.id = c.key_id";
+
+                            sqLiteCommand.CommandText = command;
+
+                            SQLiteDataReader reader = sqLiteCommand.ExecuteReader();
+
+                            while (reader.Read())
+                            {
+                                try
+                                {
+                                    result.Add(new MainTable()
+                                    {
+                                        id = (long)reader[0],
+                                        name = !object.Equals(reader[1], DBNull.Value) ? (string)reader[1] : string.Empty,
+                                        good = !object.Equals(reader[2], DBNull.Value) ? Convert.ToBoolean(reader[2]) : Convert.ToBoolean("null"),
+                                        isChecked = false,
+                                        texts = !object.Equals(reader[3], DBNull.Value) ? Convert.ToInt32(reader[3]) : 0,
+                                        spintexts = !object.Equals(reader[4], DBNull.Value) ? Convert.ToInt32(reader[4]) : 0,
+                                        urls = !object.Equals(reader[5], DBNull.Value) ? Convert.ToInt32(reader[5]) : 0,
+
+                                        images = !object.Equals(reader[6], DBNull.Value) ? Convert.ToInt32(reader[6]) : 0,
+                                        snippets = !object.Equals(reader[7], DBNull.Value) ? Convert.ToInt32(reader[7]) : 0,
+                                        suggests = !object.Equals(reader[8], DBNull.Value) ? Convert.ToInt32(reader[8]) : 0,
+                                        videos = !object.Equals(reader[9], DBNull.Value) ? Convert.ToInt32(reader[9]) : 0,
+                                        cluster = !object.Equals(reader[10], DBNull.Value) ? (string)reader[10] : string.Empty,
+                                    });
+                                }
+                                catch (Exception ex) { }
+                            }
+                        }
+                        connection.Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+            return result;
+        }
+
         public bool Add<T>(string path, string dbName, string values) where T : class, new()
         {
             if (Directory.Exists(path) && File.Exists(path + dbName + ".db"))
@@ -216,7 +345,7 @@ namespace KeywordsSoft.Library.Database
 
                             string val = string.Join(",", values);
 
-                            sqLiteCommand.CommandText = $"DELETE FROM {typeof(T).Name} WHERE {cleanFilter}; VACUUM;" +
+                            sqLiteCommand.CommandText = $"DELETE FROM {typeof(T).Name} WHERE {cleanFilter};" +
                                                         $"INSERT INTO {typeof(T).Name} ({types}) VALUES {val};";
                             sqLiteCommand.ExecuteNonQuery();
                         }

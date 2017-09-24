@@ -11,7 +11,7 @@ namespace KeywordsSoft.Library.Helpers
 {
     public class SuggestsHelper
     {
-        private string Path = $@"{ConfigurationManager.AppSettings["DatabasePath"]}\suggests\";
+        public static string Path = $@"{ConfigurationManager.AppSettings["DatabasePath"]}\suggests\";
 
         private string CreateCommand = @"CREATE TABLE suggests(
                                             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
@@ -67,6 +67,11 @@ namespace KeywordsSoft.Library.Helpers
         {
             //string ids = string.Join(",", keysIds);
             return Database.MoveToAnotherDatabase<Suggests>(Path, dbNameFrom + "_suggests", dbNameTo + "_suggests", $"key_id in ({keysIds})", maxId);
+        }
+
+        public bool Vacuum(string dbName)
+        {
+            return Database.Vacuum<Suggests>(Path, dbName + "_suggests");
         }
     }
 }

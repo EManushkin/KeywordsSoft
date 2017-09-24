@@ -159,5 +159,29 @@ namespace KeywordsSoft.Library.Helpers
                     return false;
             }
         }
+
+        public bool Vacuum(string dbName, Parsers parser)
+        {
+            switch (parser.type)
+            {
+                case Parsers.type_texts:
+                    var textsHelper = new TextsHelper();
+                    return textsHelper.Vacuum(dbName);
+                case Parsers.type_images:
+                    var imagesHelper = new ImagesHelper();
+                    return imagesHelper.Vacuum(dbName);
+                case Parsers.type_videos:
+                    var videosHelper = new VideosHelper();
+                    return videosHelper.Vacuum(dbName);
+                case Parsers.type_snippets:
+                    var snippetsHelper = new SnippetsHelper();
+                    return snippetsHelper.Vacuum(dbName);
+                case Parsers.type_suggests:
+                    var suggestsHelper = new SuggestsHelper();
+                    return suggestsHelper.Vacuum(dbName);
+                default:
+                    return false;
+            }
+        }
     }
 }

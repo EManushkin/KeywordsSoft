@@ -11,7 +11,7 @@ namespace KeywordsSoft.Library.Helpers
 {
     public class VideosHelper
     {
-        private string Path = $@"{ConfigurationManager.AppSettings["DatabasePath"]}\videos\";
+        public static string Path = $@"{ConfigurationManager.AppSettings["DatabasePath"]}\videos\";
 
         private string CreateCommand = @"CREATE TABLE Videos(
                                             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
@@ -67,6 +67,11 @@ namespace KeywordsSoft.Library.Helpers
         {
             //string ids = string.Join(",", keysIds);
             return Database.MoveToAnotherDatabase<Videos>(Path, dbNameFrom + "_videos", dbNameTo + "_videos", $"key_id in ({keysIds})", maxId);
+        }
+
+        public bool Vacuum(string dbName)
+        {
+            return Database.Vacuum<Videos>(Path, dbName + "_videos");
         }
     }
 }

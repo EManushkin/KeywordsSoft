@@ -11,7 +11,7 @@ namespace KeywordsSoft.Library.Helpers
 {
     public class ImagesHelper
     {
-        private string Path = $@"{ConfigurationManager.AppSettings["DatabasePath"]}\images\";
+        public static string Path = $@"{ConfigurationManager.AppSettings["DatabasePath"]}\images\";
 
         private string CreateCommand = @"CREATE TABLE images(
                                             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
@@ -67,6 +67,11 @@ namespace KeywordsSoft.Library.Helpers
         {
             //string ids = string.Join(",", keysIds);
             return Database.MoveToAnotherDatabase<Images>(Path, dbNameFrom + "_images", dbNameTo + "_images", $"key_id in ({keysIds})", maxId);
+        }
+
+        public bool Vacuum(string dbName)
+        {
+            return Database.Vacuum<Images>(Path, dbName + "_images");
         }
     }
 }

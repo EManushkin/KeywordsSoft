@@ -80,6 +80,30 @@ namespace KeywordsSoft.Library.Helpers
         }
 
 
+        public List<MainTable> SelectMainTable(string dbName, string parserId = null)
+        {
+            List<MainTable> MainTableList = new List<MainTable>();
+
+            string filter = null;
+            if (parserId != null)
+            {
+                filter = $"parser_id = {parserId}";
+            }
+
+            MainTableList = Database.SelectMainTable(new List<DbNamePath>()
+            {
+                new DbNamePath() { Name = dbName, Path = KeysHelper.Path, Class = "Keys"},
+                new DbNamePath() { Name = dbName + "_texts", Path = TextsHelper.Path, Class = "Texts"},
+                new DbNamePath() { Name = dbName + "_images", Path = ImagesHelper.Path, Class = "Images"},
+                new DbNamePath() { Name = dbName + "_snippets", Path = SnippetsHelper.Path, Class = "Snippets"},
+                new DbNamePath() { Name = dbName + "_suggests", Path = SuggestsHelper.Path, Class = "Suggests"},
+                new DbNamePath() { Name = dbName + "_videos", Path = VideosHelper.Path, Class = "Videos"},
+                new DbNamePath() { Name = dbName + "_clusters", Path = ClustersHelper.Path, Class = "Clusters"}
+            }, filter);
+
+            return MainTableList;
+        }
+
         public List<MainTable> Select(string dbName, string parserId = null)
         {
             List<MainTable> MainTableList = new List<MainTable>();
@@ -90,52 +114,7 @@ namespace KeywordsSoft.Library.Helpers
                 filter = $"parser_id = {parserId}";
             }
 
-            //var KeysList = new KeysHelper().Select(dbName);
-            //var TextsList = new TextsHelper().Select(dbName, (filter != null ? filter : "1") + " group by key_id", "id, key_id, CAST(COUNT(NULLIF(text, '' )) as TEXT) as text, CAST(COUNT(NULLIF(spin, '' )) as TEXT) as spin, parser_id, CAST(COUNT(NULLIF(url, '' )) as TEXT) as url");
-            //var ImagesList = new ImagesHelper().Select(dbName, (filter != null ? filter : "1") + " group by key_id", "id, key_id, CAST(COUNT(NULLIF(text, '' )) as TEXT) as text, parser_id");
-            //var SnippetsList = new SnippetsHelper().Select(dbName, (filter != null ? filter : "1") + " group by key_id", "id, key_id, CAST(COUNT(NULLIF(text, '' )) as TEXT) as text, parser_id");
-            //var SuggestsList = new SuggestsHelper().Select(dbName, (filter != null ? filter : "1") + " group by key_id", "id, key_id, CAST(COUNT(NULLIF(text, '' )) as TEXT) as text, parser_id");
-            //var VideosList = new VideosHelper().Select(dbName, (filter != null ? filter : "1") + " group by key_id", "id, key_id, CAST(COUNT(NULLIF(text, '' )) as TEXT) as text, parser_id");
-            //var ClustersList = new ClustersHelper().Select(dbName);
-
-            //MainTableList = (
-            //    from k in KeysList
-            //    join t in TextsList on k.id equals t.key_id into tmp_t
-            //    from t in tmp_t.DefaultIfEmpty()
-            //    join i in ImagesList on k.id equals i.key_id into tmp_i
-            //    from i in tmp_i.DefaultIfEmpty()
-            //    join sn in SnippetsList on k.id equals sn.key_id into tmp_sn
-            //    from sn in tmp_sn.DefaultIfEmpty()
-            //    join su in SuggestsList on k.id equals su.key_id into tmp_su
-            //    from su in tmp_su.DefaultIfEmpty()
-            //    join v in VideosList on k.id equals v.key_id into tmp_v
-            //    from v in tmp_v.DefaultIfEmpty()
-            //    select new MainTable()
-            //    {
-            //        isChecked = false,
-            //        id = k.id,
-            //        name = k.name,
-            //        good = k.good,
-            //        cluster = string.Join(", ", ClustersList.Where(x => x.key_id == k.id).Select(c => c.cluster_id.ToString()).OrderBy(c => c)),
-            //        urls = t == null ? 0 : int.Parse(t.url),
-            //        texts = t == null ? 0 : int.Parse(t.text),
-            //        spintexts = t == null ? 0 : int.Parse(t.spin),
-            //        images = i == null ? 0 : int.Parse(i.text),
-            //        snippets = sn == null ? 0 : int.Parse(sn.text),
-            //        suggests = su == null ? 0 : int.Parse(su.text),
-            //        videos = v == null ? 0 : int.Parse(v.text),
-            //    }).ToList();
-
-
-
-
-
-            //string t1;
-            //System.Diagnostics.Stopwatch sw = new Stopwatch();
-            //sw.Start();
-
             List<Task> tasks = new List<Task>();
-
 
             var KeysList = Task.Run(() =>
             {
@@ -195,9 +174,6 @@ namespace KeywordsSoft.Library.Helpers
                     suggests = su == null ? 0 : int.Parse(su.text),
                     videos = v == null ? 0 : int.Parse(v.text),
                 }).ToList();
-
-            //sw.Stop();
-            //t1 = (sw.ElapsedMilliseconds / 100.0).ToString();
 
             return MainTableList;
         }

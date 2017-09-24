@@ -11,7 +11,7 @@ namespace KeywordsSoft.Library.Helpers
 {
     public class SnippetsHelper
     {
-        private string Path = $@"{ConfigurationManager.AppSettings["DatabasePath"]}\snippets\";
+        public static string Path = $@"{ConfigurationManager.AppSettings["DatabasePath"]}\snippets\";
 
         private string CreateCommand = @"CREATE TABLE snippets(
                                             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
@@ -67,6 +67,11 @@ namespace KeywordsSoft.Library.Helpers
         {
             //string ids = string.Join(",", keysIds);
             return Database.MoveToAnotherDatabase<Snippets>(Path, dbNameFrom + "_snippets", dbNameTo + "_snippets", $"key_id in ({keysIds})", maxId);
+        }
+
+        public bool Vacuum(string dbName)
+        {
+            return Database.Vacuum<Snippets>(Path, dbName + "_snippets");
         }
     }
 }

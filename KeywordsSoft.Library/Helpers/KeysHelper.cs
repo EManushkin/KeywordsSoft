@@ -11,7 +11,7 @@ namespace KeywordsSoft.Library.Helpers
 {
     public class KeysHelper
     {
-        private string Path = $@"{ConfigurationManager.AppSettings["DatabasePath"]}\keys\";
+        public static string Path = $@"{ConfigurationManager.AppSettings["DatabasePath"]}\keys\";
 
         private const string CreateCommand = @"CREATE TABLE Keys(
                                                   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 

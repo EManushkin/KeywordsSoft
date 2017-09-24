@@ -172,8 +172,21 @@ namespace KeywordsSoft.Program
 
         public void LoadDataGridViewCategoryKeys(string parserId = null)
         {
-            //MainTableList = helper.Select(currentCategory, parserId);
-            dgView = new BindingListView<MainTable>(helper.Select(currentCategory, parserId));//MainTableList
+            string workTimeInSec;
+            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+
+            //sw.Restart();
+            //dgView = new BindingListView<MainTable>(helper.SelectMainTable(currentCategory, parserId));
+            //sw.Stop();
+            //workTimeInSec = (sw.ElapsedMilliseconds / 1000.0).ToString();
+
+
+            //sw.Restart();
+            dgView = new BindingListView<MainTable>(helper.Select(currentCategory, parserId));
+            //sw.Stop();
+            //workTimeInSec = (sw.ElapsedMilliseconds / 1000.0).ToString();
+
+            
             dataGridViewCategoryKeys.DataSource = dgView;
 
             ShowRowsCount(dgView.Count);
@@ -371,7 +384,7 @@ namespace KeywordsSoft.Program
             System.Threading.Thread.Sleep(100);
             if ((bool)e.Result)
             {
-                
+                parserHelper.Vacuum(currentCategory, parserForKeysParse);
 
                 var confirmResult = MessageBox.Show($"Информация по выбранным ключам по типу {parserForKeysParse.type} спарсена парсером {parserForKeysParse.name}.", "Парсинг завершен", MessageBoxButtons.OK);
                 if (confirmResult == DialogResult.OK)

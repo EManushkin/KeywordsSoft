@@ -11,7 +11,7 @@ namespace KeywordsSoft.Library.Helpers
 {
     public class ClustersHelper
     {
-        private string Path = $@"{ConfigurationManager.AppSettings["DatabasePath"]}\clusters\";
+        public static string Path = $@"{ConfigurationManager.AppSettings["DatabasePath"]}\clusters\";
 
         private string CreateCommand = @"CREATE TABLE keys_clusters(
                                             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
