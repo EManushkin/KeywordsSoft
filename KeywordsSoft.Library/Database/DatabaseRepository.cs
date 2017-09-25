@@ -25,7 +25,8 @@ namespace KeywordsSoft.Library.Database
 
         private string GetConnectionString(string fullPath)
         {
-            return $@"Data Source={fullPath}.db;Version=3;"; //Password={ConfigurationManager.AppSettings["DatabasePassword"]};
+            return $@"Data Source={fullPath}.db;Version=3;"; 
+            //return $@"Data Source={fullPath}.db;Version=3;Password={ConfigurationManager.AppSettings["DatabasePassword"]};";
         }
 
 

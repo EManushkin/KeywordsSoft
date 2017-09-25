@@ -172,8 +172,8 @@ namespace KeywordsSoft.Program
 
         public void LoadDataGridViewCategoryKeys(string parserId = null)
         {
-            string workTimeInSec;
-            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+            //string workTimeInSec;
+            //System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
 
             //sw.Restart();
             //dgView = new BindingListView<MainTable>(helper.SelectMainTable(currentCategory, parserId));
